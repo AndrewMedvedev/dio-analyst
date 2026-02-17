@@ -11,7 +11,13 @@ from pydantic import SecretStr
 
 from ..agents.prompts import PROMPT_CWV, PROMPT_MARKDOWN, PROMPT_RESULT
 from ..settings import settings
-from .schemas import CWVReport, SEOAnalysisReport, SiteAnalysisReport
+from .schemas import (
+    AnalysisResult,
+    CWVReport,
+    SEOAnalysisReport,
+    SiteAnalysisReport,
+    WebsiteAnalysisResult,
+)
 
 CHUNK_SIZE = 1500
 CHUNK_OVERLAP = 50
@@ -37,6 +43,10 @@ text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
 )
 
 parser_markdown = PydanticOutputParser(pydantic_object=SEOAnalysisReport)
+
+parser_specialization = PydanticOutputParser(pydantic_object=WebsiteAnalysisResult)
+
+parser_expertise = PydanticOutputParser(pydantic_object=AnalysisResult)
 
 
 markdown_prompt_template: PromptTemplate = PromptTemplate(
