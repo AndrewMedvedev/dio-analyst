@@ -3,12 +3,11 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ...core.depends import yandex_gpt
+from ...core.depends import parser_aio_content, yandex_gpt
+from ...core.schemas import ListGenerateAIOContent
 from ...utils.checkup import get_json_ld, get_llms_data, get_robots_data
-from ..prompts import (
-    PROMPT_ANALYZE_ROBOTS,
-)
-from ..utils import count_tokens_with_ai_message
+from ..prompts import PROMPT_ANALYZE_ROBOTS, PROMPT_GENERATE_AIO_CONTENT
+from ..utils import count_tokens, count_tokens_with_ai_message
 from .utils import analyze_json_ld, analyze_llms_txt, generate_json_ld, generate_llms_txt
 
 logger = logging.getLogger(__name__)
@@ -16,13 +15,28 @@ logger = logging.getLogger(__name__)
 
 class State(TypedDict):
     url: str
-    pages: list[str]
     markdown: list[dict]
     html: list[dict]
+    new_content: list[dict]
     jsons_ld: list[dict]
     robots_txt: str
     llms_txt: str
     total_tokens: int
+
+
+async def generate_aio_content(state: State) -> dict:
+    new_content: list = []
+    total_tokens = 0
+    chain = yandex_gpt | parser_aio_content
+    for data in state["markdown"]:
+        request = PROMPT_GENERATE_AIO_CONTENT.format(
+            data=data["markdown"], format_instructions=parser_aio_content.get_format_instructions()
+        )
+        result: ListGenerateAIOContent = await chain.ainvoke(request)
+        tokens = await count_tokens(request, result.model_dump_json())
+        total_tokens += tokens
+        new_content.append({"url": data["url"], "content": result.model_dump()})
+    return {"total_tokens": total_tokens, "new_content": new_content}
 
 
 async def get_lds(state: State) -> dict:
@@ -37,7 +51,7 @@ async def get_lds(state: State) -> dict:
         generate = await generate_json_ld(state["markdown"][index]["markdown"])
         jsons_ld.append({"url": data["url"], "json_ld": generate["json_ld"]})
         total_tokens += generate["total_tokens"]
-
+    total_tokens += state["total_tokens"]
     return {"jsons_ld": jsons_ld, "total_tokens": total_tokens}
 
 
@@ -64,11 +78,13 @@ async def get_llms_txt(state: State):
 
 builder = StateGraph(State)
 
+builder.add_node("generate_aio_content", generate_aio_content)
 builder.add_node("get_lds", get_lds)
 builder.add_node("get_robots", get_robots)
 builder.add_node("get_llms_txt", get_llms_txt)
 
-builder.add_edge(START, "get_lds")
+builder.add_edge(START, "generate_aio_content")
+builder.add_edge("generate_aio_content", "get_lds")
 builder.add_edge("get_lds", "get_robots")
 builder.add_edge("get_robots", "get_llms_txt")
 builder.add_edge("get_llms_txt", END)

@@ -3,7 +3,6 @@ import logging
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
-from pydantic import HttpUrl
 
 from ...core.depends import (
     cwv_prompt_template,
@@ -14,7 +13,6 @@ from ...core.depends import (
 )
 from ...core.schemas import CWVReport, SiteAnalysisReport
 from ...integrations.google_psi_api import run_page_speed
-from ...utils.tree import TreeNode
 from ..prompts import PROMPT_RESULT
 from .utils import analyze_markdown, get_seo_issues
 
@@ -23,8 +21,6 @@ logger = logging.getLogger(__name__)
 
 class State(TypedDict):
     url: str
-    site_map: TreeNode
-    pages: list[HttpUrl]
     markdown: list[dict]
     html: list[dict]
     analyze_md: list[dict]

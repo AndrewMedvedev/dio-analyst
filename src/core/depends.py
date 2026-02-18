@@ -12,11 +12,13 @@ from pydantic import SecretStr
 from ..agents.prompts import PROMPT_CWV, PROMPT_MARKDOWN, PROMPT_RESULT
 from ..settings import settings
 from .schemas import (
-    AnalysisResult,
     CWVReport,
+    ExpertiseSite,
+    ListGenerateAIOContent,
+    SemanticCore,
     SEOAnalysisReport,
     SiteAnalysisReport,
-    WebsiteAnalysisResult,
+    SpecializationSite,
 )
 
 CHUNK_SIZE = 1500
@@ -44,9 +46,11 @@ text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
 
 parser_markdown = PydanticOutputParser(pydantic_object=SEOAnalysisReport)
 
-parser_specialization = PydanticOutputParser(pydantic_object=WebsiteAnalysisResult)
+parser_specialization = PydanticOutputParser(pydantic_object=SpecializationSite)
 
-parser_expertise = PydanticOutputParser(pydantic_object=AnalysisResult)
+parser_expertise = PydanticOutputParser(pydantic_object=ExpertiseSite)
+
+parser_aio_content = PydanticOutputParser(pydantic_object=ListGenerateAIOContent)
 
 
 markdown_prompt_template: PromptTemplate = PromptTemplate(
@@ -60,6 +64,7 @@ parser_cwv = PydanticOutputParser(pydantic_object=CWVReport)
 
 parser_result = PydanticOutputParser(pydantic_object=SiteAnalysisReport)
 
+parser_sc = PydanticOutputParser(pydantic_object=SemanticCore)
 
 cwv_prompt_template: PromptTemplate = PromptTemplate(
     template=PROMPT_CWV,
