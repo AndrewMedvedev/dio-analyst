@@ -7,8 +7,14 @@ from ...core.depends import parser_aio_content, yandex_gpt
 from ...core.schemas import ListGenerateAIOContent
 from ...utils.checkup import get_json_ld, get_llms_data, get_robots_data
 from ..prompts import PROMPT_ANALYZE_ROBOTS, PROMPT_GENERATE_AIO_CONTENT
-from ..utils import count_tokens, count_tokens_with_ai_message
-from .utils import analyze_json_ld, analyze_llms_txt, generate_json_ld, generate_llms_txt
+from .utils import (
+    analyze_json_ld,
+    analyze_llms_txt,
+    count_tokens,
+    count_tokens_with_ai_message,
+    generate_json_ld,
+    generate_llms_txt,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -27,7 +27,7 @@ class Issue(BaseModel):
 
 def validate_title(soup: BeautifulSoup) -> list[Issue]:
     title_tag = soup.find("title")
-    if title_tag.text is None:
+    if title_tag.text is None:  # type: ignore  # noqa: PGH003
         return [
             Issue(
                 level=IssueLevel.CRITICAL,
@@ -36,7 +36,7 @@ def validate_title(soup: BeautifulSoup) -> list[Issue]:
                 element="title",
             )
         ]
-    title = title_tag.get_text().strip()
+    title = title_tag.get_text().strip()  # type: ignore  # noqa: PGH003
     if not title:
         return [
             Issue(
@@ -82,7 +82,7 @@ def validate_description(soup: BeautifulSoup) -> list[Issue]:
                 element="description",
             )
         ]
-    description = description_element.get("content", "").strip()
+    description = description_element.get("content", "").strip()  # type: ignore  # noqa: PGH003
     if not description:
         return [
             Issue(
@@ -210,10 +210,9 @@ def validate_images(soup: BeautifulSoup) -> list[Issue]:
             images_without_alt += 1
         else:
             images_with_alt += 1
-        if (
-            src and any(type in src.lower() for type in ["image", "img", "picture"])  # noqa: A001
-        ) and not any(
-            extension in src.lower() for extension in [".jpg", ".jpeg", ".png", ".webp"]
+        if (src and any(type in src.lower() for type in ["image", "img", "picture"])) and not any(  # noqa: A001, PGH003, RUF100
+            extension in src.lower()  # type: ignore  # noqa: PGH003
+            for extension in [".jpg", ".jpeg", ".png", ".webp"]  # type: ignore  # noqa: PGH003
         ):
             images_without_description += 1
     # Добавляем один лог для изображений без alt

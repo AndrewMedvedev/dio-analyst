@@ -37,6 +37,13 @@ yandex_gpt: ChatOpenAI = ChatOpenAI(
     max_retries=3,
 )
 
+gpt_oss_120b: ChatOpenAI = ChatOpenAI(
+    api_key=SecretStr(settings.yandexcloud.api_key),
+    model=f"gpt://{settings.yandexcloud.folder_id}/gpt-oss-120b/latest",
+    base_url="https://llm.api.cloud.yandex.net/v1",
+    max_retries=3,
+)
+
 text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
     chunk_size=CHUNK_SIZE,
     chunk_overlap=CHUNK_OVERLAP,

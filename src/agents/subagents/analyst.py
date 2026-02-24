@@ -7,7 +7,7 @@ from ...core.depends import parser_expertise, parser_sc, parser_specialization, 
 from ...core.schemas import ExpertiseSite, SemanticCore, SpecializationSite
 from ...utils.web_parser import get_markdown_content
 from ..prompts import PROMPT_EXPERTISE, PROMPT_SEMANTIC_CORE, PROMPT_SPECIALIZATION
-from ..utils import count_tokens, one_bit_queries
+from .utils import count_tokens, one_bit_queries
 
 
 class State(TypedDict):

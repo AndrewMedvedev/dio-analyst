@@ -4,8 +4,8 @@ from langgraph.graph import END, START, StateGraph
 from playwright.async_api import async_playwright
 from pydantic import HttpUrl
 
-from ..utils.tree import PRIORITY_KEYWORDS, TreeNode, build_site_tree, extract_key_pages
-from ..utils.web_parser import get_html_content, get_markdown_content
+from ...utils.tree import PRIORITY_KEYWORDS, TreeNode, build_site_tree, extract_key_pages
+from ...utils.web_parser import get_html_content, get_markdown_content
 
 
 class State(TypedDict):
@@ -55,8 +55,8 @@ async def get_markups(state: State) -> dict:
     markdown: list = []
     for i in state["pages"]:
         markups = await get_site_markups(str(i))
-        html.append({"url": i, "html": markups["html"]})
-        markdown.append({"url": i, "markdown": markups["markdown"]})
+        html.append({"url": str(i), "html": markups["html"]})
+        markdown.append({"url": str(i), "markdown": markups["markdown"]})
     return {"html": html, "markdown": markdown}
 
 

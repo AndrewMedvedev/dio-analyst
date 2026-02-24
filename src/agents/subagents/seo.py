@@ -75,7 +75,7 @@ async def final_result(state: State) -> dict:
     tokens = count_data + count_result
     total_tokens = state["total_tokens"] + tokens
     logger.info(result)
-    return {"result": result, "total_tokens": total_tokens}
+    return {"result": result.to_dict, "total_tokens": total_tokens}
 
 
 builder = StateGraph(State)

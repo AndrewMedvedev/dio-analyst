@@ -1,12 +1,15 @@
+from enum import StrEnum
+
 from langchain.agents import AgentState
 from pydantic import BaseModel, Field
 
 
 class State(AgentState):
     request: str
-    importer_result: dict
-    aio_result: dict
-    seo_result: dict
+    importer_result: dict | None
+    analyst_result: dict | None
+    aio_result: dict | None
+    seo_result: dict | None
     total_tokens: int
     total_money: float
 
@@ -128,6 +131,19 @@ class SiteAnalysisReport(BaseModel):
     seo: SEOScore
     performance: PerformanceScore
 
+    @property
+    def to_dict(self) -> dict:
+        return {
+            "overall_summary": self.overall_summary,
+            "sitemap_analysis": self.sitemap_analysis,
+            "content_analysis": self.content_analysis,
+            "core_web_vitals_analysis": self.core_web_vitals_analysis,
+            "issues": [i.model_dump() for i in self.issues],
+            "recommendations": self.recommendations,
+            "seo": self.seo.model_dump(),
+            "performance": self.performance.model_dump(),
+        }
+
 
 class SpecializationSite(BaseModel):
     specialization: str
@@ -143,3 +159,13 @@ class SemanticCore(BaseModel):
     high_frequency: list[str] = Field(description="Высокочастотные запросы")
     medium_frequency: list[str] = Field(description="Среднечастотные запросы")
     low_frequency: list[str] = Field(description="Низкочастотные запросы")
+
+
+class Role(StrEnum):
+    AI = "assistant"
+    USER = "user"
+
+
+class Chat(BaseModel):
+    role: Role
+    content: str

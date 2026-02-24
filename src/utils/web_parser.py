@@ -5,8 +5,6 @@ from bs4 import BeautifulSoup
 from playwright.async_api import Browser, BrowserContext, Page
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
-# logger = logging.getLogger(__name__)
-
 FINGERPRINT_SPOOFING_SCRIPT = """
 () => {
     // Удаление webdriver property
@@ -167,7 +165,7 @@ SCRIPTS: tuple[str, ...] = (
     % (
         "ru-RU",
         "ru",
-        random.choice(PLATFORMS),
+        random.choice(PLATFORMS),  # noqa: S311
         random.choice([4, 8, 12, 16]),  # noqa: S311
     ),
     WEBGL_SPOOFING_SCRIPT,
@@ -182,8 +180,8 @@ async def _create_new_stealth_context(browser: Browser) -> BrowserContext:
     """
     screen_resolution = generate_screen_resolution()
     context = await browser.new_context(
-        viewport=screen_resolution,
-        screen=screen_resolution,
+        viewport=screen_resolution,  # type: ignore  # noqa: PGH003
+        screen=screen_resolution,  # type: ignore  # noqa: PGH003
         user_agent=generate_user_agent(),
         accept_downloads=False,
         ignore_https_errors=True,
@@ -241,8 +239,6 @@ async def get_markdown_content(browser: Browser, url: str) -> str:
         await page.wait_for_load_state("networkidle", timeout=5_000)
         await page.wait_for_load_state("load", timeout=5_000)
     except PlaywrightTimeoutError:
-        # Fallback в случае неудачного ожидания загрузки страницы
-        # logger.warning("Networkidle timeout for %s, using domcontentloaded", page.url)
         await page.wait_for_load_state("domcontentloaded")
     page_content = await page.content()
     soup = BeautifulSoup(page_content, "html.parser")
@@ -263,7 +259,5 @@ async def get_html_content(browser: Browser, url: str) -> str:
         await page.wait_for_load_state("networkidle", timeout=5_000)
         await page.wait_for_load_state("load", timeout=5_000)
     except PlaywrightTimeoutError:
-        # Fallback в случае неудачного ожидания загрузки страницы
-        # logger.warning("Networkidle timeout for %s, using domcontentloaded", page.url)
         await page.wait_for_load_state("domcontentloaded")
     return await page.content()

@@ -1,43 +1,60 @@
-from fastapi import APIRouter, FastAPI, status
-from fastapi.middleware.cors import CORSMiddleware
+import json
 
-from ..agents.aio_agent.agent import agent_aio
-from ..agents.pipeline_seo import agent_seo
+from fastapi import APIRouter, status
+
+from ..agents.prompts import PROMPT_INFORMANT, PROMPT_SUMMARIZE_CHAT
+from ..agents.rag import retrieve
+from ..agents.workflow import agent
+from ..core.depends import gpt_oss_120b
+from ..core.schemas import Chat
 
 router = APIRouter(prefix="/api/v1")
 
+messages: list = [
+    {"role": "system", "content": PROMPT_INFORMANT},
+]
+PROMPT = """
+Данные из RAG:
+{rag_data}
+
+Запрос пользователя:
+{data}
+"""
+
+
+async def get_answer(message: dict) -> str:
+    retriv = retrieve(
+        query=message["content"],
+        metadata_filter={"tenant_id": "b77f7b87-2d40-45fa-b653-2ff34d5fd587"},
+    )
+    print(message)
+    print(retriv)
+    messages.append(message)
+    messages_str = json.dumps(messages, ensure_ascii=False)
+    tokens = gpt_oss_120b.get_num_tokens(messages_str)
+
+    if tokens >= 50000:
+        dialog_text = json.dumps(messages[1::], ensure_ascii=False)
+        request = PROMPT_SUMMARIZE_CHAT.format(dialog_text=dialog_text)
+        summarize = await gpt_oss_120b.ainvoke(request)
+        messages.clear()
+        messages.append({"role": "assistant", "content": summarize.content})
+    response = await gpt_oss_120b.ainvoke(PROMPT.format(data=message, rag_data=retriv))
+    print(response)
+    messages.append({"role": "assistant", "content": response.content})
+    return response.content  # type: ignore  # noqa: PGH003
+
 
 @router.get("/agent", status_code=status.HTTP_200_OK)
-async def answer(url: str) -> dict:
-    """Добавляет https:// если протокол не указан"""
+async def analyze(url: str) -> dict:
     if not url.startswith(("http://", "https://")):
         url = f"https://{url}"
-    aio = await agent_aio.ainvoke({"url": url})
-    seo = await agent_seo.ainvoke({"url": url})
-    total_tokens = aio["total_tokens"] + seo["total_tokens"]
-    total_money = total_tokens / 1000 * 0.5
-    return {
-        "seo": seo["result"],
-        "json_ld": aio["json_ld"],
-        "robots_txt": aio["robots_txt"],
-        "llms_txt": aio["llms_txt"],
-        "total_tokens": total_tokens,
-        "total_money": round(total_money, 2),
-    }
+    data = await agent.ainvoke({"url": url})
+    del data["importer_result"]
+    return data
 
 
-def create_fastapi_app() -> FastAPI:
-    app = FastAPI()
-    setup_middleware(app)
-    app.include_router(router)
-    return app
-
-
-def setup_middleware(app: FastAPI) -> None:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+@router.post("/chat", status_code=status.HTTP_200_OK)
+async def answer(chat: Chat) -> dict:
+    result = await get_answer(chat.model_dump())
+    return {"answer": result}
