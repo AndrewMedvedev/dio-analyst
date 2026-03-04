@@ -254,10 +254,10 @@ async def get_html_content(browser: Browser, url: str) -> str:
     """
 
     page = await _get_current_page(browser)
-    await page.goto(url)
+    await page.goto(url, timeout=60000)
     try:
-        await page.wait_for_load_state("networkidle", timeout=5_000)
-        await page.wait_for_load_state("load", timeout=5_000)
+        await page.wait_for_load_state("networkidle", timeout=60000)
+        await page.wait_for_load_state("load", timeout=60000)
     except PlaywrightTimeoutError:
-        await page.wait_for_load_state("domcontentloaded")
+        await page.wait_for_load_state("domcontentloaded", timeout=60000)
     return await page.content()
