@@ -1,166 +1,458 @@
 [
   {
-    "url": "https://www.1ab.ru/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya",
-    "links": [
-      "https://www.1ab.ru/gossektor/liniya-konsultacii",
-      "https://www.1ab.ru/akcii-i-meropriyatiya",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=specialOffers",
-      "https://www.1ab.ru/servisy",
-      "https://www.1ab.ru/programmy/1s-erp-upravlenie-predpriyatiem-2",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185243",
-      "https://www.1ab.ru/programmy/otrasli/logistika-i-sklad",
-      "https://www.1ab.ru/o-kompanii",
-      "https://www.1ab.ru/o-kompanii/novosti",
-      "https://www.1ab.ru/programmy",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/187290",
-      "https://www.1ab.ru/uslugi/integraciya-1s-s-marketplejsami",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184613",
-      "https://www.1ab.ru/o-kompanii/novosti/196446",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/186111",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/183567",
-      "https://www.1ab.ru/kontakty",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184049",
-      "https://www.1ab.ru/uslugi/markirovka-1s",
-      "https://www.1ab.ru/uslugi/avtomatizaciya-farmacevticheskoj-otrasli-na-baze-1S",
-      "https://www.1ab.ru/programmy/1s-bitrix",
-      "https://www.1ab.ru/programmy/1s-dokumentooborot-gosudarstvennogo-uchrezhdeniya-8",
-      "https://www.1ab.ru/uslugi/arenda-servera",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/bitrix24",
-      "https://www.1ab.ru/servisy/1s-elektronnyj-dokumentooborot",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185017",
-      "https://www.1ab.ru/uslugi/podderzhka-1s",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184716",
-      "https://www.1ab.ru/uslugi/importozameshchenie",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185161",
-      "https://www.1ab.ru/uslugi/1s-its",
-      "https://www.1ab.ru/vnedreniya",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/189516",
-      "https://www.1ab.ru/programmy/1s-licenzii",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/183571",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185964",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=meropriyatiya&directEventsType=gossektor",
-      "https://www.1ab.ru/o-kompanii/politika-konfidencialnosti",
-      "https://www.1ab.ru/o-kompanii/obrabotka-personalnyh-dannyh",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184820",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya-8-bazovaya-versiya",
-      "https://www.1ab.ru/uslugi/uslugi-po-nastrojke-1s",
-      "https://www.1ab.ru/uslugi/informacionnaya-bezopasnost",
-      "https://www.1ab.ru/gossektor",
-      "https://www.1ab.ru/uslugi/liniya-konsultatsiy",
-      "https://www.1ab.ru/uslugi/vnedrenie-1s",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184525",
-      "https://www.1ab.ru/programmy/1s-demo",
-      "https://www.1ab.ru/programmy/1s-dokumentooborot",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya-8-korp",
-      "https://www.1ab.ru/uslugi/uslugi-dlya-torgovyh-kompanij",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/182917",
-      "https://www.1ab.ru/blagodarstvennye-pisma",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=meropriyatiya",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya-8-prof",
-      "https://www.1ab.ru/programmy/1s-zarplata-i-upravlenie-personalom",
-      "https://www.1ab.ru/servisy/1s-otchetnost",
-      "https://www.1ab.ru/gossektor/uslugi",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185605",
-      "https://www.1ab.ru/uslugi/obuchenie-1s",
-      "https://www.1ab.ru/programmy/otrasli",
-      "https://www.1ab.ru/servisy/1spark-riski",
-      "https://www.1ab.ru/uslugi/hosting-1s",
-      "https://www.1ab.ru/programmy/1s-kompleksnaya-avtomatizatsiya-8",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-8-3",
-      "https://www.1ab.ru/uslugi/udalennyy-sistemnyy-administrator",
-      "https://www.1ab.ru/uslugi/server-1s",
-      "https://www.1ab.ru/programmy/1s-upravlenie-torgovley",
-      "https://www.1ab.ru/gossektor/obuchenie",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/185015",
-      "https://www.1ab.ru/blog",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/188379",
-      "https://www.1ab.ru/uslugi/it-autsorsing",
-      "https://www.1ab.ru/uslugi/obsluzhivanie-1s",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/184524",
-      "https://www.1ab.ru/gossektor/otraslevye-resheniya",
-      "https://www.1ab.ru/nashi-rezultaty/vnedrennye-resheniya/192433",
-      "https://www.1ab.ru/servisy/1s-kontragent",
-      "https://www.1ab.ru/uslugi/po-dlya-biznesa",
-      "https://www.1ab.ru/programmy/1s-gosudarstvennye-i-munitsipalnye-zakupki-8",
-      "https://www.1ab.ru/uslugi/soprovozhdenie-po-SLA",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/arenda-1s",
-      "https://www.1ab.ru/gossektor/programmy",
-      "https://www.1ab.ru/karera",
-      "https://www.1ab.ru/programmy/pricelist",
-      "https://www.1ab.ru/programmy/1s-zarplata-i-kadry-gosudarstvennogo-uchrezhdeniya",
-      "https://www.1ab.ru/gossektor/tendernaya-deyatelnost",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/1s-fresh"
-    ]
+    "url": "https://arsplus.ru/upload/arsenalcv_2.png",
+    "alt": ""
   },
   {
-    "url": "https://www.1ab.ru/gossektor/liniya-konsultacii",
-    "links": [
-      "https://www.1ab.ru/uslugi/uslugi-po-nastrojke-1s",
-      "https://www.1ab.ru/gossektor/liniya-konsultacii",
-      "https://www.1ab.ru/uslugi/informacionnaya-bezopasnost",
-      "https://www.1ab.ru/akcii-i-meropriyatiya",
-      "https://www.1ab.ru/gossektor",
-      "https://www.1ab.ru/uslugi/liniya-konsultatsiy",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=specialOffers",
-      "https://www.1ab.ru/servisy",
-      "https://www.1ab.ru/uslugi/vnedrenie-1s",
-      "https://www.1ab.ru/programmy/1s-demo",
-      "https://www.1ab.ru/programmy/1s-erp-upravlenie-predpriyatiem-2",
-      "https://www.1ab.ru/programmy/1s-dokumentooborot",
-      "https://www.1ab.ru/programmy/otrasli/logistika-i-sklad",
-      "https://www.1ab.ru/uslugi/uslugi-dlya-torgovyh-kompanij",
-      "https://www.1ab.ru/o-kompanii",
-      "https://www.1ab.ru/blagodarstvennye-pisma",
-      "https://www.1ab.ru/o-kompanii/novosti",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=meropriyatiya",
-      "https://www.1ab.ru/programmy/1s-zarplata-i-upravlenie-personalom",
-      "https://www.1ab.ru/programmy",
-      "https://www.1ab.ru/servisy/1s-otchetnost",
-      "https://www.1ab.ru/gossektor/uslugi",
-      "https://www.1ab.ru/uslugi/integraciya-1s-s-marketplejsami",
-      "https://www.1ab.ru/uslugi/obuchenie-1s",
-      "https://www.1ab.ru/o-kompanii/novosti/196446",
-      "https://www.1ab.ru/programmy/otrasli",
-      "https://www.1ab.ru/servisy/1spark-riski",
-      "https://www.1ab.ru/programmy/1s-kompleksnaya-avtomatizatsiya-8",
-      "https://www.1ab.ru/kontakty",
-      "https://www.1ab.ru/programmy/1s-bukhgalteriya-8-3",
-      "https://www.1ab.ru/uslugi/udalennyy-sistemnyy-administrator",
-      "https://www.1ab.ru/uslugi/hosting-1s",
-      "https://www.1ab.ru/uslugi/markirovka-1s",
-      "https://www.1ab.ru/uslugi/avtomatizaciya-farmacevticheskoj-otrasli-na-baze-1S",
-      "https://www.1ab.ru/uslugi/server-1s",
-      "https://www.1ab.ru/programmy/1s-bitrix",
-      "https://www.1ab.ru/programmy/1s-upravlenie-torgovley",
-      "https://www.1ab.ru/programmy/1s-dokumentooborot-gosudarstvennogo-uchrezhdeniya-8",
-      "https://www.1ab.ru/gossektor/obuchenie",
-      "https://www.1ab.ru/uslugi/arenda-servera",
-      "https://www.1ab.ru/blog",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/bitrix24",
-      "https://www.1ab.ru/uslugi/it-autsorsing",
-      "https://www.1ab.ru/servisy/1s-elektronnyj-dokumentooborot",
-      "https://www.1ab.ru/uslugi/obsluzhivanie-1s",
-      "https://www.1ab.ru/gossektor/otraslevye-resheniya",
-      "https://www.1ab.ru/uslugi/podderzhka-1s",
-      "https://www.1ab.ru/servisy/1s-kontragent",
-      "https://www.1ab.ru/uslugi/po-dlya-biznesa",
-      "https://www.1ab.ru/programmy/1s-gosudarstvennye-i-munitsipalnye-zakupki-8",
-      "https://www.1ab.ru/uslugi/soprovozhdenie-po-SLA",
-      "https://www.1ab.ru/uslugi/importozameshchenie",
-      "https://www.1ab.ru/uslugi/1s-its",
-      "https://www.1ab.ru/vnedreniya",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/arenda-1s",
-      "https://www.1ab.ru/programmy/1s-licenzii",
-      "https://www.1ab.ru/gossektor/programmy",
-      "https://www.1ab.ru/karera",
-      "https://www.1ab.ru/programmy/pricelist",
-      "https://www.1ab.ru/programmy/1s-zarplata-i-kadry-gosudarstvennogo-uchrezhdeniya",
-      "https://www.1ab.ru/akcii-i-meropriyatiya/?directLink=meropriyatiya&directEventsType=gossektor",
-      "https://www.1ab.ru/o-kompanii/politika-konfidencialnosti",
-      "https://www.1ab.ru/gossektor/tendernaya-deyatelnost",
-      "https://www.1ab.ru/o-kompanii/obrabotka-personalnyh-dannyh",
-      "https://www.1ab.ru/servisy/oblachnye-resheniya/1s-fresh"
-    ]
+    "url": "https://arsplus.ru/new/img/Link%20%2814%29.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/local/templates/main/images/link.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/image%207%20%281%29.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/Link%20%2810%29.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/image%207%20%281%29.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/Link%20%2815%29.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2013%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2016%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2017%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2019%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2018%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2023%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2020%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2021%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2015%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/Link%20%2817%29.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/%D0%A0%D0%B5%D1%81%D1%83%D1%80%D1%81%2027%40300x-8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/Link%20%2818%29.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/456/1s2q5ieg5dft0s880spuq23et2hbcx8j.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/f3a/6nftsrjgqy3inylwtnt9qz01nkmbqd6f.webp",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/aaf/hh533uzjs915rh366zlblk1k10i1cftx.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/5a8/jnrvw3nbuyeyb7b40boj3cokitp00r4z.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/334/56llkogpgknotrqbx6k3idvc2b4xdf0b.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/35b/hdktx43872g0wwtcowpnmiam5bd38wkr.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/63f/rx96vcugt5koqny30e7vqyqb0b8h1fel.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/3fe/cs1jz5ckr4210cwoh0txfdf2byb3idbj.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/9b5/sf1qug7lwcpdtvyg5y47fnyjl2rh1f30.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/403/mvf95tky4j0aonhcdzlbp9tpqwibogfh.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/2ad/e021kfqgqlfdvz86haularlu2retn7fv.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/056/3uduola52bcz3c5rgknzwde1e675kdj6.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/8eb/po91n8mre1hwqu2keqlwsdd8zz5lw2q4.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/164/7n9qi1bin7xyz2l1qhnnb3g8jokqsor6.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/30c/wtq9mmcrgvjd4902tcfmoeycjcxv6x1a.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/b84/6dvszt22hcsr3itn8n42yaw83amg0p2n.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/12c/xcl2detys9tdi8zd6bpjyqllo2jb0iks.jpg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/456/1s2q5ieg5dft0s880spuq23et2hbcx8j.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/e40/6cu3c13gsjlek8x8ve70kke4grembnow.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/inf.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/Логотип ProntoQ..png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/Basealt_logo_col.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/6.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/10.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/img/12.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/19_2.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/24.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/13.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/15.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/100.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/11.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/22.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/20.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/photo_2024-12-26_12-37-42-Photoroom.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/111.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/14.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/2.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/9.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/3.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/17.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/16.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/23.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/18.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/logo_contentai.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/38.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/vendors/черный.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/1.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/2.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/3.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/4.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/5.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/6.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/8.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/10.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/11.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/12.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/13.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/14.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/15.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/16.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/17.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/18.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/19.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/20.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/22.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/23.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/24-Photoroom.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/25.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/26.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/new/logos/27-Photoroom.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/de9/500_500_2/c2go945082d9g5fgp2nop4n828zcrvpq.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/a1b/500_500_2/fzw85vya1tq235egzcawomf1fib530na.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/d42/500_500_2/xwz9afq4yhq72dqycbkdw528kbal0l7p.jpeg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/603/500_500_2/ou3ex9msx1mi1rav3cg7nk79256w6zxj.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/42f/500_500_2/so83smy892direakb8g24forbj799l0a.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/resize_cache/iblock/a41/500_500_2/1iq82esfspc424g8xtasgdtkm6wf86vr.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/arsenalcv_white.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/1e7/j7ydbra3cwyqmrtnznl389i4oxwxgaei.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/300/ut80pvpprgp2c8ot43kbm6q8hrnlir8i.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/073/4uvkwe4i40yazmysn2oqf5jik7cb2xoe.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/cdf/2ox7x2iyx91fswwpdhjj0yrpn82bguok.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/ad8/76s1wbnyizr4jleervr2gwap9dci487v.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/wildberries.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/fd0/tb0p37wyj526yvc473u92xo9bhudtv0s.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/e05/7b5x0ia6l4q34g16p003lpe990x4jumq.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/1e7/j7ydbra3cwyqmrtnznl389i4oxwxgaei.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/300/ut80pvpprgp2c8ot43kbm6q8hrnlir8i.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/upload/iblock/cdf/2ox7x2iyx91fswwpdhjj0yrpn82bguok.png",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/images/close.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/images/close.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/images/close.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://arsplus.ru/images/close.svg",
+    "alt": ""
+  },
+  {
+    "url": "https://vk.com/rtrg?p=VK-RTRG-1850453-8YLp4",
+    "alt": ""
   }
 ]

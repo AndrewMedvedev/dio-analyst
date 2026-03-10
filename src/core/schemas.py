@@ -169,3 +169,12 @@ class Role(StrEnum):
 class Chat(BaseModel):
     role: Role
     content: str
+
+
+class QueueData(BaseModel):
+    urls: list
+    start_url: str
+    base_url: str
+    passed_urls: set
+    found: bool
+    result: list[dict]

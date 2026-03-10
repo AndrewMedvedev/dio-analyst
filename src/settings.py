@@ -19,6 +19,17 @@ class GoogleSettings(BaseSettings):
     psi_api_key: str = "<API_KEY>"
 
 
+class RabbitSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="RABBITMQ_")
+
+    user: str = "user"
+    password: str = "password"
+
+    @property
+    def url(self) -> str:
+        return f"amqp://{self.user}:{self.password}@localhost:5672/"
+
+
 class YandexCloudSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="YANDEX_CLOUD_")
 
@@ -29,6 +40,7 @@ class YandexCloudSettings(BaseSettings):
 class Settings(BaseSettings):
     google: GoogleSettings = GoogleSettings()
     yandexcloud: YandexCloudSettings = YandexCloudSettings()
+    rabbit: RabbitSettings = RabbitSettings()
 
 
 settings = Settings()
