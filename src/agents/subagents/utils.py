@@ -1,24 +1,34 @@
 import logging
+import mimetypes
 
 from bs4 import BeautifulSoup
 from langchain.messages import AIMessage
 
 from ...core.depends import (
-    parser_markdown,
     yandex_gpt,
 )
-from ...core.schemas import SEOAnalysisReport
 from ...utils.layout_structure import find_seo_issues
-from ..prompts import (
-    PROMPT_ANALYZE_JSON_LD,
-    PROMPT_ANALYZE_LLMS_TXT,
-    PROMPT_GENERATE_JSON_LD,
-    PROMPT_GENERATE_LLMS_TXT,
-    PROMPT_MARKDOWN,
-    PROMPT_SUMMARIZE,
-)
 
 logger = logging.getLogger(__name__)
+
+
+async def get_mime(url: str, data: bytes) -> str:
+    """Определяет MIME-тип изображения по URL и содержимому."""
+    mime_type, _ = mimetypes.guess_type(url)
+    if mime_type:
+        return mime_type
+
+    # Проверка сигнатур
+    if data.startswith(b"\xff\xd8"):
+        return "image/jpeg"
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+        return "image/webp"
+    # Неизвестный тип
+    raise ValueError(f"Не удалось определить MIME-тип для {url}")
 
 
 async def count_tokens_with_ai_message(request: str, result: AIMessage) -> int:
@@ -31,58 +41,6 @@ async def count_tokens(request: str, result: str) -> int:
     count_request = yandex_gpt.get_num_tokens(request)
     count_result = yandex_gpt.get_num_tokens(result)
     return count_request + count_result
-
-
-async def analyze_json_ld(ld: list) -> dict:
-    request = PROMPT_ANALYZE_JSON_LD.format(json_ld=ld)
-    result = await yandex_gpt.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    logger.info(result.content)
-    return {"json_ld": result.content, "total_tokens": total_tokens}
-
-
-async def generate_json_ld(markdown: str) -> dict:
-    request = PROMPT_GENERATE_JSON_LD.format(data=markdown)
-    result = await yandex_gpt.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    logger.info(result.content)
-    return {"json_ld": result.content, "total_tokens": total_tokens}
-
-
-async def analyze_llms_txt(txt: str) -> dict:
-    request = PROMPT_ANALYZE_LLMS_TXT.format(data=txt)
-    result = await yandex_gpt.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    logger.info(result.content)
-    return {"llms_txt": result.content, "total_tokens": total_tokens}
-
-
-async def generate_llms_txt(markdowns: list[dict]) -> dict:
-    data_all = []
-    total_tokens = 0
-    for i in markdowns:
-        request_summarize = PROMPT_SUMMARIZE.format(data=i["markdown"])
-        summarize = await yandex_gpt.ainvoke(request_summarize)
-        tokens = await count_tokens_with_ai_message(request_summarize, summarize)
-        total_tokens += tokens
-        data = {"url": i["url"], "data": summarize.content}
-        data_all.append(data)
-    request = PROMPT_GENERATE_LLMS_TXT.format(data=data_all)
-    result = await yandex_gpt.ainvoke(request)
-    count = await count_tokens_with_ai_message(request, result)
-    total_tokens += count
-    logger.info(result.content)
-    return {"llms_txt": result.content, "total_tokens": total_tokens}
-
-
-async def analyze_markdown(markdown: str) -> dict:
-    request = PROMPT_MARKDOWN.format(
-        query=markdown, format_instructions=parser_markdown.get_format_instructions()
-    )  # noqa: E501, RUF100
-    chain = yandex_gpt | parser_markdown
-    result: SEOAnalysisReport = await chain.ainvoke(request)
-    total_tokens = await count_tokens(request, result.model_dump_json())
-    return {"result": result.model_dump(), "total_tokens": total_tokens}
 
 
 async def get_seo_issues(html: str) -> list:

@@ -14,16 +14,17 @@ from ...core.depends import (
 from ...core.schemas import CWVReport, SiteAnalysisReport
 from ...integrations.google_psi_api import run_page_speed
 from ..prompts import PROMPT_RESULT
-from .utils import analyze_markdown, get_seo_issues
+from .process import analyze_markdown
+from .utils import get_seo_issues
 
 logger = logging.getLogger(__name__)
 
 
 class State(TypedDict):
     url: str
-    markdown: list[dict]
-    html: list[dict]
-    analyze_md: list[dict]
+    markdown: str
+    html: str
+    analyze_md: dict
     seo_issue: list[dict]
     cwv: CWVReport
     result: SiteAnalysisReport
@@ -31,16 +32,14 @@ class State(TypedDict):
 
 
 async def analyze_markups(state: State) -> dict:
-    analyze_md = []
-    issues = []
-    total_tokens = 0
-    for index, data in enumerate(state["html"]):
-        markdown = await analyze_markdown(state["markdown"][index]["markdown"])
-        seo_issue = await get_seo_issues(data["html"])
-        analyze_md.append({"url": data["url"], "markdown": markdown["result"]})
-        issues.append({"url": data["url"], "seo_issue": seo_issue})
-        total_tokens += markdown["total_tokens"]
-    return {"analyze_md": analyze_md, "seo_issue": issues, "total_tokens": total_tokens}
+    result, tokens = await analyze_markdown(state["markdown"])
+    seo_issue = await get_seo_issues(state["html"])
+    logger.info("Анализ разметки сайта")
+    return {
+        "analyze_md": result,
+        "seo_issue": seo_issue,
+        "total_tokens": tokens,
+    }
 
 
 async def get_core_web_vitals(state: State) -> dict:
@@ -51,10 +50,8 @@ async def get_core_web_vitals(state: State) -> dict:
     count_result = yandex_gpt.get_num_tokens(str(result))
     tokens = count_cwv + count_result
     total_tokens = state["total_tokens"] + tokens
-    logger.info(result)
+    logger.info("Получение CWV")
     return {"cwv": result.model_dump(), "total_tokens": total_tokens}
-
-
 
 
 async def final_result(state: State) -> dict:
@@ -69,14 +66,13 @@ async def final_result(state: State) -> dict:
         cwv=state["cwv"],
         format_instructions=parser_result.get_format_instructions(),
     )
-    logger.info(request)
     count_data = yandex_gpt.get_num_tokens(request)
 
     result: SiteAnalysisReport = await chain.ainvoke(request)
     count_result = yandex_gpt.get_num_tokens(result.model_dump_json())
     tokens = count_data + count_result
     total_tokens = state["total_tokens"] + tokens
-    logger.info(result)
+    logger.info("Результат SEO")
     return {"result": result.to_dict, "total_tokens": total_tokens}
 
 

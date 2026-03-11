@@ -3,96 +3,97 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ...core.depends import parser_aio_content, yandex_gpt
-from ...core.schemas import ListGenerateAIOContent
+from ...core.depends import parser_aio_content, text_splitter, yandex_gpt
+from ...core.schemas import GenerateAIOContent
 from ...utils.checkup import get_json_ld, get_llms_data, get_robots_data
 from ..prompts import PROMPT_ANALYZE_ROBOTS, PROMPT_GENERATE_AIO_CONTENT
-from .utils import (
+from .process import (
     analyze_json_ld,
     analyze_llms_txt,
-    count_tokens,
-    count_tokens_with_ai_message,
     generate_json_ld,
     generate_llms_txt,
 )
+from .utils import count_tokens, count_tokens_with_ai_message
 
 logger = logging.getLogger(__name__)
 
 
 class State(TypedDict):
     url: str
-    markdown: list[dict]
-    html: list[dict]
-    new_content: list[dict]
-    jsons_ld: list[dict]
+    markdown: str
+    html: str
+    new_content: dict
+    json_ld: dict
     robots_txt: str
     llms_txt: str
     total_tokens: int
 
 
 async def generate_aio_content(state: State) -> dict:
-    new_content: list = []
-    total_tokens = 0
     chain = yandex_gpt | parser_aio_content
-    for data in state["markdown"]:
-        request = PROMPT_GENERATE_AIO_CONTENT.format(
-            data=data["markdown"], format_instructions=parser_aio_content.get_format_instructions()
-        )
-        result: ListGenerateAIOContent = await chain.ainvoke(request)
-        tokens = await count_tokens(request, result.model_dump_json())
-        total_tokens += tokens
-        new_content.append({"url": data["url"], "content": result.model_dump()})
-    return {"total_tokens": total_tokens, "new_content": new_content}
+    splited_markdown = text_splitter.split_text(state["markdown"])
+    request = PROMPT_GENERATE_AIO_CONTENT.format(
+        data=splited_markdown, format_instructions=parser_aio_content.get_format_instructions()
+    )
+    result: GenerateAIOContent = await chain.ainvoke(request)
+    logger.info("Генерация AIO контента")
+    total_tokens = await count_tokens(request, result.model_dump_json())
+    return {"total_tokens": total_tokens, "new_content": result.model_dump()}
 
 
-async def get_lds(state: State) -> dict:
-    total_tokens = 0
-    jsons_ld = []
-    for index, data in enumerate(state["html"]):
-        ld = get_json_ld(data["html"])
-        if ld != []:
-            analyze = await analyze_json_ld(ld)
-            jsons_ld.append({"url": data["url"], "json_ld": analyze["json_ld"]})
-            total_tokens += analyze["total_tokens"]
-        generate = await generate_json_ld(state["markdown"][index]["markdown"])
-        jsons_ld.append({"url": data["url"], "json_ld": generate["json_ld"]})
-        total_tokens += generate["total_tokens"]
-    total_tokens += state["total_tokens"]
-    return {"jsons_ld": jsons_ld, "total_tokens": total_tokens}
+async def create_lds(state: State) -> dict:
+    ld = get_json_ld(state["html"])
+    if ld != []:
+        analyze = await analyze_json_ld(ld)
+        logger.info("Анализ json-ld контента")
+        return {
+            "json_ld": analyze["json_ld"],
+            "total_tokens": analyze["total_tokens"] + state["total_tokens"],
+        }
+    splited_markdown = text_splitter.split_text(state["markdown"])
+    generate = await generate_json_ld(splited_markdown)
+    logger.info("Генерация json-ld контента")
+    return {
+        "json_ld": generate["json_ld"],
+        "total_tokens": generate["total_tokens"] + state["total_tokens"],
+    }
 
 
-async def get_robots(state: State) -> dict:
+async def change_robots_txt(state: State) -> dict:
     data = await get_robots_data(state["url"])
     request = PROMPT_ANALYZE_ROBOTS.format(data=data)
     result = await yandex_gpt.ainvoke(request)
     tokens = await count_tokens_with_ai_message(request, result)
     total_tokens = state["total_tokens"] + tokens
-    logger.info(result.content)
+    logger.info("Изменение robots.txt")
     return {"robots_txt": result.content, "total_tokens": total_tokens}
 
 
-async def get_llms_txt(state: State):
+async def create_llms_txt(state: State):
     llms_txt = await get_llms_data(state["url"])
     if llms_txt:
         analyze = await analyze_llms_txt(llms_txt)
         total_tokens = state["total_tokens"] + analyze["total_tokens"]
+        logger.info("Анализ llms контента")
         return {"total_tokens": total_tokens, "llms_txt": analyze["llms_txt"]}
-    generate = await generate_llms_txt(state["markdown"])
+    splited_markdown = text_splitter.split_text(state["markdown"])
+    generate = await generate_llms_txt(splited_markdown, url=state["url"])
     total_tokens = state["total_tokens"] + generate["total_tokens"]
+    logger.info("Генерация llms контента")
     return {"total_tokens": total_tokens, "llms_txt": generate["llms_txt"]}
 
 
 builder = StateGraph(State)
 
 builder.add_node("generate_aio_content", generate_aio_content)
-builder.add_node("get_lds", get_lds)
-builder.add_node("get_robots", get_robots)
-builder.add_node("get_llms_txt", get_llms_txt)
+builder.add_node("create_lds", create_lds)
+builder.add_node("change_robots_txt", change_robots_txt)
+builder.add_node("create_llms_txt", create_llms_txt)
 
 builder.add_edge(START, "generate_aio_content")
-builder.add_edge("generate_aio_content", "get_lds")
-builder.add_edge("get_lds", "get_robots")
-builder.add_edge("get_robots", "get_llms_txt")
-builder.add_edge("get_llms_txt", END)
+builder.add_edge("generate_aio_content", "create_lds")
+builder.add_edge("create_lds", "change_robots_txt")
+builder.add_edge("change_robots_txt", "create_llms_txt")
+builder.add_edge("create_llms_txt", END)
 
 agent_aio = builder.compile()

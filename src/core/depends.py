@@ -14,7 +14,8 @@ from ..settings import settings
 from .schemas import (
     CWVReport,
     ExpertiseSite,
-    ListGenerateAIOContent,
+    GenerateAIOContent,
+    ListGeneratedAlt,
     SemanticCore,
     SEOAnalysisReport,
     SiteAnalysisReport,
@@ -64,7 +65,7 @@ parser_specialization = PydanticOutputParser(pydantic_object=SpecializationSite)
 
 parser_expertise = PydanticOutputParser(pydantic_object=ExpertiseSite)
 
-parser_aio_content = PydanticOutputParser(pydantic_object=ListGenerateAIOContent)
+parser_aio_content = PydanticOutputParser(pydantic_object=GenerateAIOContent)
 
 
 markdown_prompt_template: PromptTemplate = PromptTemplate(
@@ -79,6 +80,8 @@ parser_cwv = PydanticOutputParser(pydantic_object=CWVReport)
 parser_result = PydanticOutputParser(pydantic_object=SiteAnalysisReport)
 
 parser_sc = PydanticOutputParser(pydantic_object=SemanticCore)
+
+parser_generated_alt = PydanticOutputParser(pydantic_object=ListGeneratedAlt)
 
 cwv_prompt_template: PromptTemplate = PromptTemplate(
     template=PROMPT_CWV,

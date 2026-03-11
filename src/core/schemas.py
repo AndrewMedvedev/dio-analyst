@@ -97,10 +97,6 @@ class GenerateAIOContent(BaseModel):
     )
 
 
-class ListGenerateAIOContent(BaseModel):
-    content: list[GenerateAIOContent]
-
-
 class Problem(BaseModel):
     title: str = Field(..., description="Краткое название проблемы")
     description: str = Field(..., description="Понятное объяснение проблемы")
@@ -178,3 +174,12 @@ class QueueData(BaseModel):
     passed_urls: set
     found: bool
     result: list[dict]
+
+
+class GeneratedAlt(BaseModel):
+    alt: str = Field(description="Сгенерированный альт тег")
+    url: str = Field(description="Ссылка для которой был сегенерирован альт тег")
+
+
+class ListGeneratedAlt(BaseModel):
+    result: list[GeneratedAlt]

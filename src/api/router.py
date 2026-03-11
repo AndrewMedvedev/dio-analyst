@@ -1,4 +1,5 @@
 import json
+import pathlib
 
 from fastapi import APIRouter, status
 
@@ -50,7 +51,9 @@ async def analyze(url: str) -> dict:
     if not url.startswith(("http://", "https://")):
         url = f"https://{url}"
     data = await agent.ainvoke({"url": url})
-    del data["importer_result"]
+    pathlib.Path("refactoring.json").write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     return data
 
 

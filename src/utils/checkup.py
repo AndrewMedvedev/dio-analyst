@@ -15,7 +15,8 @@ def get_json_ld(html: str) -> list:
 
 
 async def get_llms_data(url: str) -> str:
-    async with ClientSession() as session, session.get(f"{url}/llms.txt") as data:
+    url = parse_url(url)
+    async with ClientSession() as session, session.get(f"{url}/llms.txt", ssl=False) as data:
         try:
             result = await data.text()
             return result if "html" not in result else ""  # noqa: TRY300
@@ -24,7 +25,8 @@ async def get_llms_data(url: str) -> str:
 
 
 async def get_robots_data(url: str) -> str:
-    async with ClientSession() as session, session.get(f"{url}/robots.txt") as data:
+    url = parse_url(url)
+    async with ClientSession() as session, session.get(f"{url}/robots.txt", ssl=False) as data:
         try:
             result = await data.text()
             return result if "html" not in result else ""  # noqa: TRY300
