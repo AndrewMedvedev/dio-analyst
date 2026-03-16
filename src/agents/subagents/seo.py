@@ -29,6 +29,7 @@ class State(TypedDict):
     cwv: CWVReport
     result: SiteAnalysisReport
     total_tokens: int
+    total_money: float
 
 
 async def analyze_markups(state: State) -> dict:
@@ -48,10 +49,10 @@ async def get_core_web_vitals(state: State) -> dict:
     count_cwv = yandex_gpt.get_num_tokens(str(cwv))
     result: CWVReport = await chain.ainvoke({"query": cwv})
     count_result = yandex_gpt.get_num_tokens(str(result))
-    tokens = count_cwv + count_result
-    total_tokens = state["total_tokens"] + tokens
+    total_tokens = count_cwv + count_result
     logger.info("Получение CWV")
-    return {"cwv": result.model_dump(), "total_tokens": total_tokens}
+    total_money = total_tokens / 1000 * 0.80
+    return {"cwv": result.model_dump(), "total_tokens": total_tokens, "total_money": total_money}
 
 
 async def final_result(state: State) -> dict:
@@ -73,7 +74,8 @@ async def final_result(state: State) -> dict:
     tokens = count_data + count_result
     total_tokens = state["total_tokens"] + tokens
     logger.info("Результат SEO")
-    return {"result": result.to_dict, "total_tokens": total_tokens}
+    total_money = (tokens / 1000 * 0.80) + state["total_money"]
+    return {"result": result.to_dict, "total_tokens": total_tokens, "total_money": total_money}
 
 
 builder = StateGraph(State)

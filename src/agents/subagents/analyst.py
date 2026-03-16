@@ -18,6 +18,7 @@ class State(TypedDict):
     expertise: dict
     semantic_core: dict
     total_tokens: int
+    total_money: float
 
 
 async def get_specialization(state: State) -> dict:
@@ -28,9 +29,11 @@ async def get_specialization(state: State) -> dict:
     result: SpecializationSite = await chain.ainvoke(request)
     total_tokens = await count_tokens(request, result.model_dump_json())
     logger.info("Получения специализации компании")
+    total_money = total_tokens / 1000 * 0.80
     return {
         "specialization": result.model_dump(),
         "total_tokens": total_tokens,
+        "total_money": total_money,
     }
 
 
@@ -44,7 +47,12 @@ async def get_expertise(state: State) -> dict:
     tokens = await count_tokens(request, result.model_dump_json())
     total_tokens = tokens + state["total_tokens"]
     logger.info("Получения экспертизы компании")
-    return {"total_tokens": total_tokens, "expertise": result.model_dump()}
+    total_money = (tokens / 1000 * 0.80) + state["total_money"]
+    return {
+        "total_tokens": total_tokens,
+        "expertise": result.model_dump(),
+        "total_money": total_money,
+    }
 
 
 async def get_semantic_core(state: State) -> dict:
@@ -56,7 +64,12 @@ async def get_semantic_core(state: State) -> dict:
     tokens = await count_tokens(request, result.model_dump_json())
     total_tokens = tokens + state["total_tokens"]
     logger.info("Получения семантического ядра компании")
-    return {"total_tokens": total_tokens, "semantic_core": result.model_dump()}
+    total_money = (tokens / 1000 * 0.80) + state["total_money"]
+    return {
+        "total_tokens": total_tokens,
+        "semantic_core": result.model_dump(),
+        "total_money": total_money,
+    }
 
 
 builder = StateGraph(State)

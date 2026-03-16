@@ -27,6 +27,7 @@ class State(TypedDict):
     robots_txt: str
     llms_txt: str
     total_tokens: int
+    total_money: float
 
 
 async def generate_aio_content(state: State) -> dict:
@@ -38,7 +39,12 @@ async def generate_aio_content(state: State) -> dict:
     result: GenerateAIOContent = await chain.ainvoke(request)
     logger.info("Генерация AIO контента")
     total_tokens = await count_tokens(request, result.model_dump_json())
-    return {"total_tokens": total_tokens, "new_content": result.model_dump()}
+    total_money = total_tokens / 1000 * 0.80
+    return {
+        "total_tokens": total_tokens,
+        "total_money": total_money,
+        "new_content": result.model_dump(),
+    }
 
 
 async def create_lds(state: State) -> dict:
@@ -46,16 +52,20 @@ async def create_lds(state: State) -> dict:
     if ld != []:
         analyze = await analyze_json_ld(ld)
         logger.info("Анализ json-ld контента")
+        total_money = (analyze["total_tokens"] / 1000 * 0.80) + state["total_money"]
         return {
             "json_ld": analyze["json_ld"],
             "total_tokens": analyze["total_tokens"] + state["total_tokens"],
+            "total_money": total_money,
         }
     splited_markdown = text_splitter.split_text(state["markdown"])
     generate = await generate_json_ld(splited_markdown)
     logger.info("Генерация json-ld контента")
+    total_money = (generate["total_tokens"] / 1000 * 0.80) + state["total_money"]
     return {
         "json_ld": generate["json_ld"],
         "total_tokens": generate["total_tokens"] + state["total_tokens"],
+        "total_money": total_money,
     }
 
 
@@ -65,8 +75,9 @@ async def change_robots_txt(state: State) -> dict:
     result = await yandex_gpt.ainvoke(request)
     tokens = await count_tokens_with_ai_message(request, result)
     total_tokens = state["total_tokens"] + tokens
+    total_money = (tokens / 1000 * 0.80) + state["total_money"]
     logger.info("Изменение robots.txt")
-    return {"robots_txt": result.content, "total_tokens": total_tokens}
+    return {"robots_txt": result.content, "total_tokens": total_tokens, "total_money": total_money}
 
 
 async def create_llms_txt(state: State):
@@ -80,7 +91,12 @@ async def create_llms_txt(state: State):
     generate = await generate_llms_txt(splited_markdown, url=state["url"])
     total_tokens = state["total_tokens"] + generate["total_tokens"]
     logger.info("Генерация llms контента")
-    return {"total_tokens": total_tokens, "llms_txt": generate["llms_txt"]}
+    total_money = (generate["total_tokens"] / 1000 * 0.80) + state["total_money"]
+    return {
+        "total_tokens": total_tokens,
+        "total_money": total_money,
+        "llms_txt": generate["llms_txt"],
+    }
 
 
 builder = StateGraph(State)

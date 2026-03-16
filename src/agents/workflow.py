@@ -6,7 +6,7 @@ from playwright.async_api import async_playwright
 
 from ..utils.web_parser import get_html_content, get_markdown_content
 from . import rag
-from .subagents import agent_aio, agent_analyst, agent_seo
+from .subagents import agent_aio, agent_analyst, agent_conent_generation, agent_seo
 
 
 class State(TypedDict):
@@ -16,6 +16,7 @@ class State(TypedDict):
     analyst_result: dict
     aio_result: dict
     seo_result: dict
+    conent_generation_result: dict
     rag_result: str
     total_tokens: int
     total_money: float
@@ -41,11 +42,13 @@ async def get_site_markups(state: State) -> dict:
 
 async def get_analyst_result(state: State) -> dict:
     result = await agent_analyst.ainvoke({"url": state["url"], "markdown": state["markdown"]})  # type: ignore  # noqa: PGH003
-    total_money = (result["total_tokens"] / 1000) * 0.41
+
     total_tokens = result["total_tokens"]
+    total_money = result["total_money"]
     del result["url"]
     del result["markdown"]
     del result["total_tokens"]
+    del result["total_money"]
     return {
         "analyst_result": result,
         "total_tokens": total_tokens,
@@ -62,12 +65,12 @@ async def get_aio_result(state: State) -> dict:
         }  # type: ignore  # noqa: PGH003
     )
     total_tokens = state["total_tokens"] + result["total_tokens"]
-    money = (result["total_tokens"] / 1000) * 0.41
-    total_money = money + state["total_money"]
+    total_money = result["total_money"] + state["total_money"]
     del result["url"]
     del result["markdown"]
     del result["html"]
     del result["total_tokens"]
+    del result["total_money"]
     return {"aio_result": result, "total_tokens": total_tokens, "total_money": total_money}
 
 
@@ -80,10 +83,28 @@ async def get_seo_result(state: State) -> dict:
         }  # type: ignore  # noqa: PGH003
     )
     total_tokens = state["total_tokens"] + result["total_tokens"]
-    money = (result["total_tokens"] / 1000) * 0.41
-    total_money = money + state["total_money"]
+    total_money = result["total_money"] + state["total_money"]
+    del result["total_tokens"]
+    del result["total_money"]
     return {
         "seo_result": result["result"],
+        "total_tokens": total_tokens,
+        "total_money": total_money,
+    }
+
+
+async def get_conent_generation_result(state: State) -> dict:
+    result = await agent_conent_generation.ainvoke(
+        {"url": state["url"], "html": state["html"], "markdown": state["markdown"]}  # type: ignore  # noqa: PGH003
+    )
+    total_tokens = state["total_tokens"] + result["total_tokens"]
+    total_money = result["total_money"] + state["total_money"]
+    del result["html"]
+    del result["markdown"]
+    del result["total_tokens"]
+    del result["total_money"]
+    return {
+        "conent_generation_result": result,
         "total_tokens": total_tokens,
         "total_money": total_money,
     }
@@ -105,11 +126,13 @@ builder.add_node("get_site_markups", get_site_markups)
 builder.add_node("get_analyst_result", get_analyst_result)
 builder.add_node("get_aio_result", get_aio_result)
 builder.add_node("get_seo_result", get_seo_result)
+builder.add_node("get_conent_generation_result", get_conent_generation_result)
 builder.add_node("save_in_rag", save_in_rag)
 builder.add_edge(START, "get_site_markups")
 builder.add_edge("get_site_markups", "get_analyst_result")
 builder.add_edge("get_analyst_result", "get_aio_result")
 builder.add_edge("get_aio_result", "get_seo_result")
-builder.add_edge("get_seo_result", "save_in_rag")
+builder.add_edge("get_seo_result", "get_conent_generation_result")
+builder.add_edge("get_conent_generation_result", "save_in_rag")
 builder.add_edge("save_in_rag", END)
 agent = builder.compile()

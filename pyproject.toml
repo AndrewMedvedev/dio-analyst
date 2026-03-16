@@ -21,6 +21,7 @@ dependencies = [
     "matplotlib>=3.10.8",
     "networkx>=3.6.1",
     "numpy>=2.4.2",
+    "pandas>=2.3.3",
     "playwright>=1.58.0",
     "plotly>=6.5.2",
     "pydantic>=2.12.5",
@@ -28,6 +29,8 @@ dependencies = [
     "pytz>=2025.2",
     "retry-plus>=1.0.5",
     "sentence-transformers>=5.2.3",
+    "streamlit>=1.55.0",
     "types-pytz>=2025.2.0.20251108",
     "ultimate-sitemap-parser>=1.8.0",
+    "wordcloud>=1.9.6",
 ]

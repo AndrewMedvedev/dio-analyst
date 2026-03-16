@@ -1,9 +1,12 @@
 import logging
 import mimetypes
+import os
+from urllib.parse import unquote, urlparse
 
 from bs4 import BeautifulSoup
 from langchain.messages import AIMessage
 
+from ...core.constants import ALLOWED_EXT
 from ...core.depends import (
     yandex_gpt,
 )
@@ -31,6 +34,13 @@ async def get_mime(url: str, data: bytes) -> str:
     raise ValueError(f"Не удалось определить MIME-тип для {url}")
 
 
+def is_image(url):
+    path = urlparse(url).path
+    path = unquote(path)
+    ext = os.path.splitext(path)[1].lower()
+    return ext in ALLOWED_EXT
+
+
 async def count_tokens_with_ai_message(request: str, result: AIMessage) -> int:
     count_request = yandex_gpt.get_num_tokens(request)
     count_result = yandex_gpt.get_num_tokens(str(result.content))
@@ -46,7 +56,14 @@ async def count_tokens(request: str, result: str) -> int:
 async def get_seo_issues(html: str) -> list:
     bs = BeautifulSoup(html, "html.parser")
     issue = find_seo_issues(bs)
-    return [i.model_dump() for i in issue]
+    result: list = []
+    for i in issue:
+        if isinstance(i, tuple):
+            result.append(i[0].model_dump())
+        else:
+            result.append(i.model_dump())
+
+    return result
 
 
 ab_queries = [
