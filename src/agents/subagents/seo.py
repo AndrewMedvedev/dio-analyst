@@ -73,7 +73,7 @@ async def final_result(state: State) -> dict:
     tokens = count_data + count_result
     total_tokens = state["total_tokens"] + tokens
     logger.info("Результат SEO")
-    total_money = (tokens / 1000 * 0.80) + state["total_money"]
+    total_money = (tokens / 1000 * 0.30) + state["total_money"]
     return {"result": result.to_dict, "total_tokens": total_tokens, "total_money": total_money}
 
 

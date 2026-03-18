@@ -45,7 +45,7 @@ async def create_title(state: State) -> dict:
         )
         result = await gpt_oss_120b.ainvoke(request)
         total_tokens = await count_tokens_with_ai_message(request, result)
-        total_money = total_tokens / 1000 * 0.80
+        total_money = total_tokens / 1000 * 0.30
         return {"title": result.content, "total_tokens": total_tokens, "total_money": total_money}
 
     return {"title": "У вас правильно написан заголовок", "total_tokens": 0}
@@ -62,7 +62,7 @@ async def create_description(state: State) -> dict:
         result = await gpt_oss_120b.ainvoke(request)
         tokens = await count_tokens_with_ai_message(request, result)
         total_tokens = state["total_tokens"] + tokens
-        total_money = (tokens / 1000 * 0.80) + state["total_money"]
+        total_money = (tokens / 1000 * 0.30) + state["total_money"]
         return {
             "description": result.content,
             "total_tokens": total_tokens,
@@ -81,7 +81,7 @@ async def create_h1(state: State) -> dict:
         result = await gpt_oss_120b.ainvoke(request)
         tokens = await count_tokens_with_ai_message(request, result)
         total_tokens = state["total_tokens"] + tokens
-        total_money = (tokens / 1000 * 0.80) + state["total_money"]
+        total_money = (tokens / 1000 * 0.30) + state["total_money"]
         return {"h1": result.content, "total_tokens": total_tokens, "total_money": total_money}
     return {"h1": "Тег H1 правильно написан"}
 

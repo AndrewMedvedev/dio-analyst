@@ -35,7 +35,7 @@ async def get_specialization(state: State) -> dict:
     result: SpecializationSite = await chain.ainvoke(request)
     total_tokens = await count_tokens(request, result.model_dump_json())
     logger.info("Получения специализации компании")
-    total_money = total_tokens / 1000 * 0.80
+    total_money = total_tokens / 1000 * 0.30
     return {
         "specialization": result.model_dump(),
         "total_tokens": total_tokens,
@@ -53,7 +53,7 @@ async def get_expertise(state: State) -> dict:
     tokens = await count_tokens(request, result.model_dump_json())
     total_tokens = tokens + state["total_tokens"]
     logger.info("Получения экспертизы компании")
-    total_money = (tokens / 1000 * 0.80) + state["total_money"]
+    total_money = (tokens / 1000 * 0.30) + state["total_money"]
     return {
         "total_tokens": total_tokens,
         "expertise": result.model_dump(),
