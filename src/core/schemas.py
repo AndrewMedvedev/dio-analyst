@@ -163,8 +163,9 @@ class Role(StrEnum):
 
 
 class Chat(BaseModel):
-    role: Role
-    content: str
+    user_id: str
+    role: Role = Role.USER
+    text: str
 
 
 class QueueData(BaseModel):

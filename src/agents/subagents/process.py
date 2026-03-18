@@ -4,7 +4,13 @@ import json
 import aiohttp
 
 from ...core.constants import BATCH_SIZE, REQUEST_TIMEOUT, STATUS_OK
-from ...core.depends import gemma_3_27b_it, parser_generated_alt, parser_markdown, yandex_gpt
+from ...core.depends import (
+    gemma_3_27b_it,
+    gpt_oss_120b,
+    parser_generated_alt,
+    parser_markdown,
+    yandex_gpt,
+)
 from ...core.schemas import SEOAnalysisReport
 from ..prompts import (
     PROMPT_ANALYZE_JSON_LD,
@@ -27,7 +33,7 @@ async def analyze_json_ld(ld: list) -> dict:
 
 async def generate_json_ld(markdown: list) -> dict:
     request = PROMPT_GENERATE_JSON_LD.format(data=markdown)
-    result = await yandex_gpt.ainvoke(request)
+    result = await gpt_oss_120b.ainvoke(request)
     total_tokens = await count_tokens_with_ai_message(request, result)
     return {"json_ld": result.content, "total_tokens": total_tokens}
 
@@ -42,7 +48,7 @@ async def analyze_llms_txt(txt: str) -> dict:
 async def generate_llms_txt(markdown: list[str], url: str) -> dict:
     total_tokens = 0
     request_summarize = PROMPT_SUMMARIZE.format(data=markdown)
-    summarize = await yandex_gpt.ainvoke(request_summarize)
+    summarize = await gpt_oss_120b.ainvoke(request_summarize)
     tokens = await count_tokens_with_ai_message(request_summarize, summarize)
     total_tokens += tokens
     request = PROMPT_GENERATE_LLMS_TXT.format(data={"url": url, "data": summarize.content})
@@ -52,11 +58,11 @@ async def generate_llms_txt(markdown: list[str], url: str) -> dict:
     return {"llms_txt": result.content, "total_tokens": total_tokens}
 
 
-async def analyze_markdown(markdown: str) -> tuple:
+async def analyze_markdown(markdown: list[str]) -> tuple:
     request = PROMPT_MARKDOWN.format(
         query=markdown, format_instructions=parser_markdown.get_format_instructions()
     )  # noqa: E501, RUF100
-    chain = yandex_gpt | parser_markdown
+    chain = gpt_oss_120b | parser_markdown
     result: SEOAnalysisReport = await chain.ainvoke(request)
     total_tokens = await count_tokens(request, result.model_dump_json())
     return result.model_dump(), total_tokens

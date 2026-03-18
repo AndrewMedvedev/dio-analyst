@@ -23,7 +23,7 @@ st.markdown(
 
 # ------------------------------
 # Автозагрузка файла all_results.json
-json_file = "all_results.json"
+json_file = "diocon.json"
 data = None
 
 if os.path.exists(json_file):
@@ -277,7 +277,6 @@ elif choice == "Сгенерированный контент":
             st.markdown(f"**H1:** {cont.get('h1', '—')}")
         with col2:
             st.markdown(f"**Description:** {cont.get('description', '—')}")
-            st.markdown(f"**Keywords:** {cont.get('keywords', '—')}")
 
         st.subheader("🖼️ Alt-теги изображений")
         alt_tags = cont.get("alt_tags", [])

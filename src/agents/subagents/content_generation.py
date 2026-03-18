@@ -5,7 +5,7 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 from langgraph.graph import END, START, StateGraph
 
-from ...core.depends import yandex_gpt
+from ...core.depends import gpt_oss_120b
 from ...utils.layout_structure import (
     validate_description,
     validate_heading,
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class State(TypedDict):
     url: str
     html: str
-    markdown: str
+    markdown: list[str]
     title: str
     description: str
     h1: str
@@ -43,7 +43,7 @@ async def create_title(state: State) -> dict:
         request = PROMPT_GENERATE_TITLE.format(
             data=state["markdown"], analyze=validate[0].model_dump()
         )
-        result = await yandex_gpt.ainvoke(request)
+        result = await gpt_oss_120b.ainvoke(request)
         total_tokens = await count_tokens_with_ai_message(request, result)
         total_money = total_tokens / 1000 * 0.80
         return {"title": result.content, "total_tokens": total_tokens, "total_money": total_money}
@@ -59,7 +59,7 @@ async def create_description(state: State) -> dict:
         request = PROMPT_GENERATE_DESCRIPTION.format(
             data=state["markdown"], analyze=validate[0].model_dump()
         )
-        result = await yandex_gpt.ainvoke(request)
+        result = await gpt_oss_120b.ainvoke(request)
         tokens = await count_tokens_with_ai_message(request, result)
         total_tokens = state["total_tokens"] + tokens
         total_money = (tokens / 1000 * 0.80) + state["total_money"]
@@ -78,7 +78,7 @@ async def create_h1(state: State) -> dict:
     if validate != []:
         analyze = [i.model_dump() for i in validate]
         request = PROMPT_GENERATE_H1.format(data=state["markdown"], analyze=analyze)
-        result = await yandex_gpt.ainvoke(request)
+        result = await gpt_oss_120b.ainvoke(request)
         tokens = await count_tokens_with_ai_message(request, result)
         total_tokens = state["total_tokens"] + tokens
         total_money = (tokens / 1000 * 0.80) + state["total_money"]

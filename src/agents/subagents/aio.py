@@ -3,7 +3,7 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ...core.depends import parser_aio_content, text_splitter, yandex_gpt
+from ...core.depends import gpt_oss_120b, parser_aio_content, yandex_gpt
 from ...core.schemas import GenerateAIOContent
 from ...utils.checkup import get_json_ld, get_llms_data, get_robots_data
 from ..prompts import PROMPT_ANALYZE_ROBOTS, PROMPT_GENERATE_AIO_CONTENT
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class State(TypedDict):
     url: str
-    markdown: str
+    markdown: list[str]
     html: str
     new_content: dict
     json_ld: dict
@@ -31,10 +31,9 @@ class State(TypedDict):
 
 
 async def generate_aio_content(state: State) -> dict:
-    chain = yandex_gpt | parser_aio_content
-    splited_markdown = text_splitter.split_text(state["markdown"])
+    chain = gpt_oss_120b | parser_aio_content
     request = PROMPT_GENERATE_AIO_CONTENT.format(
-        data=splited_markdown, format_instructions=parser_aio_content.get_format_instructions()
+        data=state["markdown"], format_instructions=parser_aio_content.get_format_instructions()
     )
     result: GenerateAIOContent = await chain.ainvoke(request)
     logger.info("Генерация AIO контента")
@@ -58,8 +57,7 @@ async def create_lds(state: State) -> dict:
             "total_tokens": analyze["total_tokens"] + state["total_tokens"],
             "total_money": total_money,
         }
-    splited_markdown = text_splitter.split_text(state["markdown"])
-    generate = await generate_json_ld(splited_markdown)
+    generate = await generate_json_ld(state["markdown"])
     logger.info("Генерация json-ld контента")
     total_money = (generate["total_tokens"] / 1000 * 0.80) + state["total_money"]
     return {
@@ -87,8 +85,7 @@ async def create_llms_txt(state: State):
         total_tokens = state["total_tokens"] + analyze["total_tokens"]
         logger.info("Анализ llms контента")
         return {"total_tokens": total_tokens, "llms_txt": analyze["llms_txt"]}
-    splited_markdown = text_splitter.split_text(state["markdown"])
-    generate = await generate_llms_txt(splited_markdown, url=state["url"])
+    generate = await generate_llms_txt(state["markdown"], url=state["url"])
     total_tokens = state["total_tokens"] + generate["total_tokens"]
     logger.info("Генерация llms контента")
     total_money = (generate["total_tokens"] / 1000 * 0.80) + state["total_money"]

@@ -5,12 +5,15 @@ from urllib.parse import unquote, urlparse
 
 from bs4 import BeautifulSoup
 from langchain.messages import AIMessage
+from playwright.async_api import async_playwright
 
 from ...core.constants import ALLOWED_EXT
 from ...core.depends import (
+    text_splitter,
     yandex_gpt,
 )
 from ...utils.layout_structure import find_seo_issues
+from ...utils.web_parser import get_html_content, get_markdown_content
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +67,25 @@ async def get_seo_issues(html: str) -> list:
             result.append(i.model_dump())
 
     return result
+
+
+async def parce_site_markups(url: str) -> tuple:
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            headless=False,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
+        )
+        try:
+            markdown = await get_markdown_content(browser, url)
+            html = await get_html_content(browser, url)
+            splited_markdown = text_splitter.split_text(markdown)
+            return splited_markdown, html
+        finally:
+            await browser.close()
 
 
 ab_queries = [

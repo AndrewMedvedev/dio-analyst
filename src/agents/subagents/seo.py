@@ -6,6 +6,7 @@ from langgraph.graph import END, START, StateGraph
 
 from ...core.depends import (
     cwv_prompt_template,
+    gpt_oss_120b,
     parser_cwv,
     parser_result,
     text_splitter,
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class State(TypedDict):
     url: str
-    markdown: str
+    markdown: list[str]
     html: str
     analyze_md: dict
     seo_issue: list[dict]
@@ -56,13 +57,11 @@ async def get_core_web_vitals(state: State) -> dict:
 
 
 async def final_result(state: State) -> dict:
-    chain = yandex_gpt | parser_result
-    dumps_markdown = json.dumps(state["analyze_md"])
+    chain = gpt_oss_120b | parser_result
     dumps_issue = json.dumps(state["seo_issue"])
-    split_markdown = text_splitter.split_text(dumps_markdown)
     split_issue = text_splitter.split_text(dumps_issue)
     request = PROMPT_RESULT.format(
-        markdown=split_markdown,
+        markdown=state["markdown"],
         seo_issue=split_issue,
         cwv=state["cwv"],
         format_instructions=parser_result.get_format_instructions(),

@@ -3,7 +3,13 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ...core.depends import parser_expertise, parser_sc, parser_specialization, yandex_gpt
+from ...core.depends import (
+    gpt_oss_120b,
+    parser_expertise,
+    parser_sc,
+    parser_specialization,
+    yandex_gpt,
+)
 from ...core.schemas import ExpertiseSite, SemanticCore, SpecializationSite
 from ..prompts import PROMPT_EXPERTISE, PROMPT_SEMANTIC_CORE, PROMPT_SPECIALIZATION
 from .utils import count_tokens, one_bit_queries
@@ -13,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class State(TypedDict):
     url: str
-    markdown: str
+    markdown: list[str]
     specialization: dict
     expertise: dict
     semantic_core: dict
@@ -25,7 +31,7 @@ async def get_specialization(state: State) -> dict:
     request = PROMPT_SPECIALIZATION.format(
         format_instructions=parser_specialization.get_format_instructions(), data=state["markdown"]
     )
-    chain = yandex_gpt | parser_specialization
+    chain = gpt_oss_120b | parser_specialization
     result: SpecializationSite = await chain.ainvoke(request)
     total_tokens = await count_tokens(request, result.model_dump_json())
     logger.info("Получения специализации компании")
@@ -38,7 +44,7 @@ async def get_specialization(state: State) -> dict:
 
 
 async def get_expertise(state: State) -> dict:
-    chain = yandex_gpt | parser_expertise
+    chain = gpt_oss_120b | parser_expertise
     request = PROMPT_EXPERTISE.format(
         data=state["markdown"],
         format_instructions=parser_expertise.get_format_instructions(),

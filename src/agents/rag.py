@@ -3,6 +3,7 @@ import json
 import logging
 import re
 import time
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
@@ -125,3 +126,13 @@ def retrieve(
         )
 
     return cleaned_results
+
+
+def delete_old_data(max_age_hours: int = 3) -> None:
+    cutoff = datetime.now(UTC) - timedelta(hours=max_age_hours)
+    cutoff_str = cutoff.isoformat()
+    collection = client.get_collection(INDEX_NAME)
+    old_docs = collection.get(where={"timestamp": {"$lt": cutoff_str}})
+    if old_docs["ids"]:
+        collection.delete(ids=old_docs["ids"])
+        logger.info(f"Из rag удалено {len(old_docs)} результатов")
