@@ -1,0 +1,14 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+node_modules
+data
+models
+*.pt
+*.bin
+*.parquet
+*.csv
+*.log

@@ -37,5 +37,6 @@ dependencies = [
     "types-python-dateutil>=2.9.0.20260305",
     "types-pytz>=2025.2.0.20251108",
     "ultimate-sitemap-parser>=1.8.0",
+    "uvicorn>=0.40.0",
     "wordcloud>=1.9.6",
 ]
