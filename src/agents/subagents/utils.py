@@ -5,6 +5,7 @@ from urllib.parse import unquote, urlparse
 
 from bs4 import BeautifulSoup
 from langchain.messages import AIMessage
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
 
 from ...core.constants import ALLOWED_EXT
@@ -12,6 +13,7 @@ from ...core.depends import (
     text_splitter,
     yandex_gpt,
 )
+from ...settings import settings
 from ...utils.layout_structure import find_seo_issues
 from ...utils.web_parser import get_html_content, get_markdown_content
 
@@ -70,20 +72,17 @@ async def get_seo_issues(html: str) -> list:
 
 
 async def parce_site_markups(url: str) -> tuple:
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            headless=False,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-            ],
-        )
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.connect(ws_endpoint=settings.chromium_ws_endpoint)
         try:
             markdown = await get_markdown_content(browser, url)
             html = await get_html_content(browser, url)
             splited_markdown = text_splitter.split_text(markdown)
-            return splited_markdown, html
-        finally:
-            await browser.close()
+        except PlaywrightTimeoutError:
+            # Fallback в случае неудачного ожидания загрузки страницы
+            logger.warning(
+                "Fallback networkidle timeout for `%s` page, using domcontentloaded", url
+            )
 
+        splited_markdown = text_splitter.split_text(markdown)
+        return splited_markdown, html

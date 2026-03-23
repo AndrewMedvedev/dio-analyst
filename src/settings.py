@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     google: GoogleSettings = GoogleSettings()
     yandexcloud: YandexCloudSettings = YandexCloudSettings()
     rabbit: RabbitSettings = RabbitSettings()
+    chromium_ws_endpoint: str = "ws://localhost:3000/playwright/chromium"
 
 
 settings = Settings()
