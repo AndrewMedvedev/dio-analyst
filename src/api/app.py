@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from ..agents.rag import delete_old_data
-from .router import router
+from .routers import router
 
 
 @asynccontextmanager

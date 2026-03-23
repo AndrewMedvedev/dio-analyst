@@ -4,7 +4,7 @@ from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from ...core.depends import gpt_oss_120b, parser_aio_content, yandex_gpt
-from ...core.schemas import GenerateAIOContent
+from ...schemas import GenerateAIOContent
 from ...utils.checkup import get_json_ld, get_llms_data, get_robots_data
 from ..prompts import PROMPT_ANALYZE_ROBOTS, PROMPT_GENERATE_AIO_CONTENT
 from .process import (

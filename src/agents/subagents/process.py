@@ -11,7 +11,7 @@ from ...core.depends import (
     parser_markdown,
     yandex_gpt,
 )
-from ...core.schemas import SEOAnalysisReport
+from ...schemas import SEOAnalysisReport
 from ..prompts import (
     PROMPT_ANALYZE_JSON_LD,
     PROMPT_ANALYZE_LLMS_TXT,

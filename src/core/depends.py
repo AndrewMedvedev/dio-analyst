@@ -13,7 +13,7 @@ from pydantic import SecretStr
 
 from ..agents.prompts import PROMPT_CWV, PROMPT_MARKDOWN, PROMPT_RESULT, PROMPT_SUMMARIZE_CHAT
 from ..settings import settings
-from .schemas import (
+from ..schemas import (
     CWVReport,
     ExpertiseSite,
     GenerateAIOContent,

@@ -10,7 +10,7 @@ from ...core.depends import (
     parser_specialization,
     yandex_gpt,
 )
-from ...core.schemas import ExpertiseSite, SemanticCore, SpecializationSite
+from ...schemas import ExpertiseSite, SemanticCore, SpecializationSite
 from ..prompts import PROMPT_EXPERTISE, PROMPT_SEMANTIC_CORE, PROMPT_SPECIALIZATION
 from .utils import count_tokens
 
