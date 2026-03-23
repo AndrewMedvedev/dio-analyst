@@ -32,6 +32,7 @@ dependencies = [
     "python-dateutil>=2.9.0.post0",
     "pytz>=2025.2",
     "retry-plus>=1.0.5",
+    "safety>=3.7.0",
     "sentence-transformers>=5.2.3",
     "streamlit>=1.55.0",
     "types-python-dateutil>=2.9.0.20260305",

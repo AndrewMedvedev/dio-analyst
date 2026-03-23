@@ -1,9 +1,12 @@
 .git
-__pycache__
+__pycache__/
 *.pyc
+.venv/
+*.log
+*.cache
+data/
 *.pyo
 *.pyd
-.env
 node_modules
 data
 models

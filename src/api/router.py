@@ -20,7 +20,7 @@ async def get_seo(url: str, user_id: str) -> dict:
     result = await agent.ainvoke({"url": url})  # type: ignore  # noqa: PGH003
     del result["html"]
     del result["markdown"]
-    rag.indexing(
+    await rag.indexing(
         text=json.dumps(result),
         metadata={
             "tenant_id": user_id,
@@ -38,7 +38,7 @@ async def get_aio(url: str, user_id: str) -> dict:
     result = await agent_aio.ainvoke({"url": url, "html": html, "markdown": markdown})  # type: ignore  # noqa: PGH003
     del result["html"]
     del result["markdown"]
-    rag.indexing(
+    await rag.indexing(
         text=json.dumps(result),
         metadata={
             "tenant_id": user_id,

@@ -12,7 +12,7 @@ from ...core.depends import (
 )
 from ...core.schemas import ExpertiseSite, SemanticCore, SpecializationSite
 from ..prompts import PROMPT_EXPERTISE, PROMPT_SEMANTIC_CORE, PROMPT_SPECIALIZATION
-from .utils import count_tokens, one_bit_queries
+from .utils import count_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ async def get_expertise(state: State) -> dict:
 
 async def get_semantic_core(state: State) -> dict:
     request = PROMPT_SEMANTIC_CORE.format(
-        data=one_bit_queries, format_instructions=parser_sc.get_format_instructions()
+        data=..., format_instructions=parser_sc.get_format_instructions()
     )
     chain = yandex_gpt | parser_sc
     result: SemanticCore = await chain.ainvoke(request)

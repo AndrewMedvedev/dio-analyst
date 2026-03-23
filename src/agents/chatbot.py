@@ -29,7 +29,7 @@ async def call_chatbot(user_id: str, user_prompt: str) -> str:
             middleware=[summarization_middleware],
             checkpointer=checkpointer,
         )
-        rag = retrieve(query=user_prompt, metadata_filter={"tenant_id": user_id})
+        rag = await retrieve(query=user_prompt, metadata_filter={"tenant_id": user_id})
 
         result = await agent.ainvoke(
             {
