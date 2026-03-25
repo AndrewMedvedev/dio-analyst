@@ -247,4 +247,4 @@ class SEOResult(BaseModel):
     model_config = {"from_attributes": True}
     user_id: UUID
     result: dict
-    created_at: datetime | None
+    created_at: datetime = Field(default_factory=datetime.now)
