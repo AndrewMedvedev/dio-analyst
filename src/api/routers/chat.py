@@ -3,7 +3,7 @@ from fastapi import APIRouter, status
 from ...agents import chatbot
 from ...schemas import Chat, Role
 
-router_chat = APIRouter(prefix="/api/v1")
+router_chat = APIRouter()
 
 
 @router_chat.post("/chat", status_code=status.HTTP_200_OK)

@@ -176,7 +176,6 @@ class PerformanceScore(BaseModel):
 
 class SiteAnalysisReport(BaseModel):
     overall_summary: str = Field(..., description="Общее резюме состояния сайта")
-    sitemap_analysis: str = Field(..., description="Выводы по sitemap")
     content_analysis: str = Field(..., description="Анализ markdown и HTML структуры")
     core_web_vitals_analysis: str = Field(..., description="Анализ Core Web Vitals простым языком")
     issues: list[Problem] = Field(default_factory=list, description="Список найденных проблем")
@@ -188,7 +187,6 @@ class SiteAnalysisReport(BaseModel):
     def to_dict(self) -> dict:
         return {
             "overall_summary": self.overall_summary,
-            "sitemap_analysis": self.sitemap_analysis,
             "content_analysis": self.content_analysis,
             "core_web_vitals_analysis": self.core_web_vitals_analysis,
             "issues": [i.model_dump() for i in self.issues],

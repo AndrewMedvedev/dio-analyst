@@ -48,7 +48,7 @@ async def create_title(state: State) -> dict:
         total_money = total_tokens / 1000 * 0.30
         return {"title": result.content, "total_tokens": total_tokens, "total_money": total_money}
 
-    return {"title": "У вас правильно написан заголовок", "total_tokens": 0}
+    return {"title": "У вас правильно написан заголовок", "total_tokens": 0, "total_money": 0}
 
 
 async def create_description(state: State) -> dict:

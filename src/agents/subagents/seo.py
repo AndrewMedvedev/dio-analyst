@@ -12,8 +12,8 @@ from ...core.depends import (
     text_splitter,
     yandex_gpt,
 )
-from ...schemas import CWVReport, SiteAnalysisReport
 from ...integrations.google_psi_api import run_page_speed
+from ...schemas import CWVReport, SiteAnalysisReport
 from ..prompts import PROMPT_RESULT
 from .process import analyze_markdown
 from .utils import get_seo_issues
