@@ -123,4 +123,4 @@ builder.add_edge("create_description", "create_h1")
 builder.add_edge("create_h1", "create_alts")
 builder.add_edge("create_alts", END)
 
-agent_conent_generation = builder.compile()
+agent_content_generation_result = builder.compile()

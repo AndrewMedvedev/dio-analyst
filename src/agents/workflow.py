@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from .subagents import agent_analyst, agent_conent_generation, agent_seo
+from .subagents import agent_analyst, agent_content_generation_result, agent_seo
 from .subagents.utils import parce_site_markups
 
 
@@ -12,7 +12,7 @@ class State(TypedDict):
     markdown: list[str]
     analyst_result: dict
     seo_result: dict
-    conent_generation_result: dict
+    content_generation_result: dict
     total_tokens: int
     total_money: float
 
@@ -57,8 +57,8 @@ async def get_seo_result(state: State) -> dict:
     }
 
 
-async def get_conent_generation_result(state: State) -> dict:
-    result = await agent_conent_generation.ainvoke(
+async def get_content_generation_result(state: State) -> dict:
+    result = await agent_content_generation_result.ainvoke(
         {"url": state["url"], "html": state["html"], "markdown": state["markdown"]}  # type: ignore  # noqa: PGH003
     )
     total_tokens = state["total_tokens"] + result["total_tokens"]
@@ -68,7 +68,7 @@ async def get_conent_generation_result(state: State) -> dict:
     del result["total_tokens"]
     del result["total_money"]
     return {
-        "conent_generation_result": result,
+        "content_generation_result": result,
         "total_tokens": total_tokens,
         "total_money": total_money,
     }
@@ -79,10 +79,10 @@ builder = StateGraph(State)
 builder.add_node("get_site_markups", get_site_markups)
 builder.add_node("get_analyst_result", get_analyst_result)
 builder.add_node("get_seo_result", get_seo_result)
-builder.add_node("get_conent_generation_result", get_conent_generation_result)
+builder.add_node("get_content_generation_result", get_content_generation_result)
 builder.add_edge(START, "get_site_markups")
 builder.add_edge("get_site_markups", "get_analyst_result")
 builder.add_edge("get_analyst_result", "get_seo_result")
-builder.add_edge("get_seo_result", "get_conent_generation_result")
-builder.add_edge("get_conent_generation_result", END)
+builder.add_edge("get_seo_result", "get_content_generation_result")
+builder.add_edge("get_content_generation_result", END)
 agent = builder.compile()

@@ -12,7 +12,6 @@ from langchain_text_splitters import (
 from pydantic import SecretStr
 
 from ..agents.prompts import PROMPT_CWV, PROMPT_MARKDOWN, PROMPT_RESULT, PROMPT_SUMMARIZE_CHAT
-from ..settings import settings
 from ..schemas import (
     CWVReport,
     ExpertiseSite,
@@ -23,6 +22,7 @@ from ..schemas import (
     SiteAnalysisReport,
     SpecializationSite,
 )
+from ..settings import settings
 
 CHUNK_SIZE = 1500
 CHUNK_OVERLAP = 50
