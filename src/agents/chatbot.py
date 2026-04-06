@@ -1,4 +1,5 @@
 import os
+from uuid import UUID
 
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage
@@ -18,7 +19,7 @@ PROMPT = """
 """
 
 
-async def call_chatbot(user_id: str, user_prompt: str) -> str:
+async def call_chatbot(user_id: UUID, user_prompt: str, generation_id: str) -> str:
     """Вызов чат-бот агента для диалога со студентом в рамках его учебного прогресса"""
 
     async with AsyncSqliteSaver.from_conn_string(os.fspath(SQLITE_PATH)) as checkpointer:
@@ -29,7 +30,10 @@ async def call_chatbot(user_id: str, user_prompt: str) -> str:
             middleware=[summarization_middleware],
             checkpointer=checkpointer,
         )
-        rag = await retrieve(query=user_prompt, metadata_filter={"tenant_id": user_id})
+        rag = await retrieve(
+            query=user_prompt,
+            metadata_filter={"tenant_id": user_id, "generation_id": generation_id},
+        )
 
         result = await agent.ainvoke(
             {

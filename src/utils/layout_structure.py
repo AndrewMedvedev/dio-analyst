@@ -12,7 +12,7 @@ SEMANTIC_TAGS = {"header", "nav", "main", "article", "section", "aside", "footer
 
 
 class IssueLevel(StrEnum):
-    CRITICAL = "critical"
+    # CRITICAL = "critical"  # noqa: ERA001
     ERROR = "error"
     WARNING = "warning"
     INFO = "info"
@@ -27,10 +27,19 @@ class Issue(BaseModel):
 
 def validate_title(soup: BeautifulSoup) -> list[Issue]:
     title_tag = soup.find("title")
+    if title_tag is None:
+        return [
+            Issue(
+                level=IssueLevel.WARNING,
+                message="Title tag is missing",
+                category="meta",
+                element="title",
+            )
+        ]
     if title_tag.text is None:  # type: ignore  # noqa: PGH003
         return [
             Issue(
-                level=IssueLevel.CRITICAL,
+                level=IssueLevel.WARNING,
                 message="Title tag is missing",
                 category="meta",
                 element="title",
@@ -40,7 +49,7 @@ def validate_title(soup: BeautifulSoup) -> list[Issue]:
     if not title:
         return [
             Issue(
-                level=IssueLevel.CRITICAL,
+                level=IssueLevel.WARNING,
                 message="Title tag is empty",
                 category="meta",
                 element="title",
@@ -76,7 +85,7 @@ def validate_description(soup: BeautifulSoup) -> list[Issue]:
     if not description_element:
         return [
             Issue(
-                level=IssueLevel.CRITICAL,
+                level=IssueLevel.WARNING,
                 message="Meta description is missing",
                 category="meta",
                 element="description",
@@ -86,7 +95,7 @@ def validate_description(soup: BeautifulSoup) -> list[Issue]:
     if not description:
         return [
             Issue(
-                level=IssueLevel.CRITICAL,
+                level=IssueLevel.WARNING,
                 message="Meta description is empty",
                 category="meta",
                 element="description",
@@ -123,7 +132,7 @@ def validate_heading(soup: BeautifulSoup) -> list[Issue]:
     if len(h1_tags) == 0:
         issues.append(
             Issue(
-                level=IssueLevel.CRITICAL,
+                level=IssueLevel.WARNING,
                 message="H1 tag is missing",
                 category="heading",
                 element="h1",
@@ -212,7 +221,7 @@ def validate_images(soup: BeautifulSoup) -> list[Issue] | tuple:
             urls.append(src)
         else:
             images_with_alt += 1
-        if (src and any(type in src.lower() for type in ["image", "img", "picture"])) and not any(  # noqa: A001, PGH003, RUF100
+        if (src and any(type in src.lower() for type in ["image", "img", "picture"])) and not any(  # noqa: A001, PGH003, RUF100 # type: ignore
             extension in src.lower()  # type: ignore  # noqa: PGH003
             for extension in [".jpg", ".jpeg", ".png", ".webp"]  # type: ignore  # noqa: PGH003
         ):

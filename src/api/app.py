@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from ..agents.rag import delete_old_data
+from ..core.errors import AppError
 from .routers import router
 
 
@@ -31,10 +33,40 @@ def create_fastapi_app() -> FastAPI:
     return app
 
 
+def set_handlers(app: FastAPI) -> None:
+    @app.exception_handler(ValueError)
+    def value_exception_handler(request: Request, exc: ValueError) -> JSONResponse:  # noqa: ARG001
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": str(exc),
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "details": {},
+                }
+            },
+        )
+
+    @app.exception_handler(AppError)
+    def app_exception_handler(request: Request, exc: AppError) -> JSONResponse:  # noqa: ARG001
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": {
+                    "code": exc.error_code,
+                    "message": exc.public_message,
+                    "status": exc.status_code,
+                    "details": exc.details,
+                }
+            },
+        )
+
+
 def setup_middleware(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

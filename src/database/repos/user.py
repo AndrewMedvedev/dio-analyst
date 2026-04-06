@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,7 +33,7 @@ class UserSEORepository:
         await self.session.flush()
         await self.session.commit()
 
-    async def read_paginated(self, user_id: str, limit: int, page: int) -> list:
+    async def read_paginated(self, user_id: UUID, limit: int, page: int) -> list:
         offset = (page - 1) * limit
         stmt = select(self.model).where(self.model.user_id == user_id).offset(offset).limit(limit)
         results = await self.session.execute(stmt)

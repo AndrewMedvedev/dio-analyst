@@ -98,7 +98,7 @@ class Settings(BaseSettings):
     mail: MailSettings = MailSettings()
     secret_key: str = "<SECRET_KEY>"
     chromium_ws_endpoint: str = "ws://localhost:3000/playwright/chromium"
-    frontend_url: str = "http://localhost:3000"
+    frontend_url: str = "http://localhost:5173"
 
 
 settings = Settings()

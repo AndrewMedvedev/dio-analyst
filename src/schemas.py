@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import StrEnum
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, PositiveInt
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, PositiveInt, field_validator
 
 
 class InvitationCreate(BaseModel):
@@ -130,6 +130,20 @@ class CWVMetricSummary(BaseModel):
     average_percent: float | None
     slow_percent: float | None
 
+    @field_validator(
+        "category",
+        "percentile",
+        "fast_percent",
+        "average_percent",
+        "slow_percent",
+        mode="before",
+    )
+    @classmethod
+    def parse_null_string(cls, v):
+        if v == "null":
+            return None
+        return v
+
 
 class CWVReport(BaseModel):
     overall_category: str | None
@@ -218,7 +232,7 @@ class Role(StrEnum):
 
 
 class Chat(BaseModel):
-    user_id: str
+    generation_id: str
     role: Role = Role.USER
     text: str
 

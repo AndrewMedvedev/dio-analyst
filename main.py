@@ -2,9 +2,10 @@ import logging
 
 import uvicorn
 
-from src.api.app import create_fastapi_app
+from src.api.app import create_fastapi_app, set_handlers
 
 app = create_fastapi_app()
+set_handlers(app)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

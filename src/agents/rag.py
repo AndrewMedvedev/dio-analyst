@@ -95,7 +95,13 @@ async def retrieve(
     params = {"query_embeddings": [embedding.tolist()], "n_results": n_results}  # type: ignore  # noqa: PGH003
 
     if metadata_filter:
-        params["where"] = metadata_filter
+        if len(metadata_filter) == 0:
+            pass  # пустой фильтр не передаём
+        elif len(metadata_filter) == 1:
+            params["where"] = metadata_filter
+        else:
+            # Несколько полей → оборачиваем в $and
+            params["where"] = {"$and": [{k: v} for k, v in metadata_filter.items()]}
     if search_string:
         params["where_document"] = {"$contains": search_string}
 
