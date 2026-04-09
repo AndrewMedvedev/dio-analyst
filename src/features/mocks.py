@@ -1,318 +1,125 @@
-mock_metrika = {
-    "totals": [1856423],
-    "data": [
-        {"dimensions": [{"id": "/", "name": "Главная страница"}], "metrics": [284521]},
-        {"dimensions": [{"id": "/programmy/", "name": "/programmy/"}], "metrics": [187432]},
-        {"dimensions": [{"id": "/uslugi/", "name": "/uslugi/"}], "metrics": [165321]},
-        {"dimensions": [{"id": "/blog/", "name": "/blog/"}], "metrics": [143256]},
-        {
-            "dimensions": [
+mock = {
+    "url": "http://www.diocon.ru",
+    "analyst_result": {
+        "specialization": {
+            "specialization": "Консалтинг и автоматизация бизнес‑процессов на базе 1С"
+        },
+        "expertise": {
+            "main_area": "Комплексная автоматизация бизнес‑процессов и внедрение программных решений 1С (консалтинг, настройка, сопровождение, обучение, продажа лицензий)",
+            "key_user_problem": "Отсутствие эффективной интегрированной системы учёта и управления (бухгалтерия, налоги, кадры, документы, ERP) приводит к ручным ошибкам, высоким затратам и сложности поддержки программного обеспечения",
+            "benefit_to_the_user": "Компания предоставляет внедрение 1С «под ключ», настройку, техническую поддержку, обновления, обучение персонала и лицензии, позволяя клиенту быстро получить работающую автоматизированную систему, снизить издержки и повысить контроль над бизнес‑процессами",
+        },
+        "semantic_core": {
+            "high_frequency": ["Ellipsis"],
+            "medium_frequency": [],
+            "low_frequency": [],
+        },
+    },
+    "seo_result": {
+        "overall_summary": "Сайт имеет базовую структуру и большое количество контентных блоков, однако отмечены серьёзные проблемы с семантикой, дублированием ссылок, неправильной иерархией заголовков, отсутствие alt‑текстов у изображений и плохие показатели Core Web Vitals. SEO‑оценка 83 из 100, но наличие критических SEO‑проблем снижает эффективность индексации. Производительность оценивается в 68 из 100, что указывает на необходимость оптимизации загрузки контента.",
+        "sitemap_analysis": "Навигация построена на основе markdown‑списков, но содержит множество дублирующихся пунктов (например, «О компании», «История», «Команда» повторяются несколько раз). Вложенные списки избыточны, некоторые ссылки представлены без контекста. Такая структура усложняет построение чистой карты сайта и может привести к дублям в индексе поисковых систем.",
+        "content_analysis": "Markdown‑контент содержит повторяющиеся пункты меню, избыточные заголовки (#) и неструктурированные списки, что ухудшает восприятие пользователем. HTML‑анализ показывает: заголовок страницы слишком короткий (34 символа), meta‑описание слишком длинное (327 символов), 11 тегов H1 вместо одного, нарушения иерархии заголовков (H2 после H0, H4 после H2), 37 изображений без атрибута alt и неиспользованные семантические теги (footer, article, header, aside, nav, main, section).",
+        "core_web_vitals_analysis": "Показатели First Contentful Paint (FCP) и Largest Contentful Paint (LCP) находятся в категории «плохой» (меньше 5‑го перцентиля), что означает медленную первую отрисовку и загрузку основного контента. Cumulative Layout Shift (CLS) хороший (0.019), что свидетельствует о стабильности макета. Отсутствуют данные по FID и TTFB. В целом, пользователь ощущает задержки в отображении основной информации.",
+        "issues": [
+            {
+                "title": "Отсутствие alt‑атрибутов у изображений",
+                "description": "37 изображений не имеют описательного alt‑текста, что ухудшает доступность и SEO.",
+                "severity": "critical",
+                "recommendation": "Добавить информативные alt‑атрибуты ко всем изображениям, особенно к логотипам и ключевым визуальным элементам.",
+            },
+            {
+                "title": "Неправильный HTTP‑статус код страницы",
+                "description": "Страница возвращает неуспешный статус код, из‑за чего поисковые системы не могут её индексировать.",
+                "severity": "critical",
+                "recommendation": "Исправить серверную конфигурацию, чтобы страница отдавалась с кодом 200 OK.",
+            },
+            {
+                "title": "Избыточное количество H1‑заголовков",
+                "description": "Найдено 11 тегов H1, тогда как рекомендуется один главный заголовок.",
+                "severity": "high",
+                "recommendation": "Сократить количество H1 до одного; остальные заголовки преобразовать в H2‑H6 согласно иерархии.",
+            },
+            {
+                "title": "Нарушение иерархии заголовков",
+                "description": "Встречаются H2 после H0 и H4 после H2, что запутывает структуру страницы.",
+                "severity": "medium",
+                "recommendation": "Пересмотреть порядок заголовков и построить логическую иерархию от H1 к H6.",
+            },
+            {
+                "title": "Слишком короткий <title>",
+                "description": "Заголовок страницы состоит из 34 символов, оптимальная длина 45‑65 символов.",
+                "severity": "medium",
+                "recommendation": "Расширить <title>, включив основные ключевые слова и бренд.",
+            },
+            {
+                "title": "Слишком длинный meta‑description",
+                "description": "Длина описания 327 символов, превышает рекомендованные 120‑160 символов.",
+                "severity": "medium",
+                "recommendation": "Сократить meta‑description до 150‑160 символов, сохранив ключевую информацию.",
+            },
+            {
+                "title": "Дублирование пунктов меню в markdown",
+                "description": "Много повторяющихся ссылок и пунктов навигации, что создает лишний контент.",
+                "severity": "low",
+                "recommendation": "Убрать дубли, оставить единственный набор пунктов меню.",
+            },
+            {
+                "title": "Неиспользуемые семантические теги",
+                "description": "Теги footer, article, header, aside, nav, main, section присутствуют, но не содержат контент.",
+                "severity": "low",
+                "recommendation": "Либо заполнить их релевантным контентом, либо удалить, чтобы не путать парсеры.",
+            },
+            {
+                "title": "Плохие показатели FCP и LCP",
+                "description": "Первая отрисовка контента и загрузка крупного элемента происходят слишком медленно.",
+                "severity": "high",
+                "recommendation": "Оптимизировать тяжёлые ресурсы: сжать изображения, отложить загрузку несрочных скриптов, использовать кеширование и CDN.",
+            },
+        ],
+        "recommendations": [
+            "Добавить alt‑тексты ко всем изображениям.",
+            "Исправить HTTP‑статус код, обеспечить 200 OK.",
+            "Сократить количество H1 до одного, исправить иерархию заголовков.",
+            "Улучшить <title> и meta‑description в соответствии с рекомендациями длины.",
+            "Удалить дублирующиеся ссылки и пункты меню из markdown‑структуры.",
+            "Оптимизировать загрузку изображений (сжатие, современные форматы) и отложить неблокирующие скрипты.",
+            "Внедрить кэширование статических ресурсов и использовать CDN.",
+            "Заполнить или убрать неиспользуемые семантические теги для чистой разметки.",
+        ],
+        "seo": {
+            "score": 83,
+            "summary": "SEO‑оценка достаточно высокая, однако критические проблемы с alt‑атрибутами и статусом HTTP снижают её эффективность.",
+        },
+        "performance": {
+            "score": 68,
+            "lcp": "null",
+            "fid": "null",
+            "cls": 0.019,
+            "summary": 'Производительность находится в категории "плохой" из‑за низких показателей FCP и LCP, однако макет стабилен (хороший CLS). Требуются оптимизации загрузки ресурсов.',
+        },
+    },
+    "conent_generation_result": {
+        "url": "http://www.diocon.ru",
+        "title": "Сопровождение 1С: настройка, поддержка и обслуживание — ДИО-Консалт",
+        "description": "ДИО-Консалт: внедрение, настройка, поддержка и обучение 1С, продажа лицензий от официальных поставщиков. Гарантия качества, бесплатная консультация. Закажите сейчас!",
+        "h1": "Комплексное внедрение и сопровождение 1С для бизнеса",
+        "alt_tags": [
+            [
                 {
-                    "id": "/programmy/1s-bukhgalteriya-8-3",
-                    "name": "/programmy/1s-bukhgalteriya-8-3",
-                }
-            ],
-            "metrics": [98765],
-        },
-        {
-            "dimensions": [
+                    "alt": "Логотип Федеральной налоговой службы России",
+                    "url": "http://www.diocon.ru/upload/iblock/cf8/cf8e950dcf01fafcfc6cab72b09b7fc4.png",
+                },
                 {
-                    "id": "/programmy/1s-erp-upravlenie-predpriyatiem-2",
-                    "name": "/programmy/1s-erp-upravlenie-predpriyatiem-2",
-                }
-            ],
-            "metrics": [87654],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/vnedrenie-1s", "name": "/uslugi/vnedrenie-1s"}],
-            "metrics": [81234],
-        },
-        {
-            "dimensions": [{"id": "/programmy/1s-licenzii", "name": "/programmy/1s-licenzii"}],
-            "metrics": [76543],
-        },
-        {
-            "dimensions": [
-                {"id": "/uslugi/soprovozhdenie-po-SLA", "name": "/uslugi/soprovozhdenie-po-SLA"}
-            ],
-            "metrics": [72345],
-        },
-        {
-            "dimensions": [
+                    "alt": "Логотип ГМС Группа, налоговое консультирование",
+                    "url": "http://www.diocon.ru/upload/iblock/b27/b271d52c9b5cca2a24bc510ec16f525e.png",
+                },
                 {
-                    "id": "/programmy/1s-kompleksnaya-avtomatizatsiya-8",
-                    "name": "/programmy/1s-kompleksnaya-avtomatizatsiya-8",
-                }
-            ],
-            "metrics": [69876],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/blog/detail/chto-takoe-sistema-1s-vidy-konfiguratsiy-i-versii",
-                    "name": "/blog/detail/chto-takoe-sistema-1s-vidy-konfiguratsiy-i-versii",
-                }
-            ],
-            "metrics": [65432],
-        },
-        {"dimensions": [{"id": "/uslugi/1s-its", "name": "/uslugi/1s-its"}], "metrics": [62345]},
-        {
-            "dimensions": [
-                {"id": "/programmy/1s-dokumentooborot", "name": "/programmy/1s-dokumentooborot"}
-            ],
-            "metrics": [59876],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/programmy/1s-zarplata-i-upravlenie-personalom",
-                    "name": "/programmy/1s-zarplata-i-upravlenie-personalom",
-                }
-            ],
-            "metrics": [57654],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/obsluzhivanie-1s", "name": "/uslugi/obsluzhivanie-1s"}],
-            "metrics": [54321],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/programmy/1s-upravlenie-torgovley",
-                    "name": "/programmy/1s-upravlenie-torgovley",
-                }
-            ],
-            "metrics": [52134],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/arenda-servera", "name": "/uslugi/arenda-servera"}],
-            "metrics": [49876],
-        },
-        {"dimensions": [{"id": "/vnedreniya/", "name": "/vnedreniya/"}], "metrics": [47654]},
-        {
-            "dimensions": [{"id": "/uslugi/obuchenie-1s", "name": "/uslugi/obuchenie-1s"}],
-            "metrics": [45432],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/blog/detail/perekhod-na-nds-22",
-                    "name": "/blog/detail/perekhod-na-nds-22",
-                }
-            ],
-            "metrics": [43210],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/hosting-1s", "name": "/uslugi/hosting-1s"}],
-            "metrics": [41234],
-        },
-        {
-            "dimensions": [{"id": "/programmy/pricelist", "name": "/programmy/pricelist"}],
-            "metrics": [39876],
-        },
-        {"dimensions": [{"id": "/gossektor/", "name": "/gossektor/"}], "metrics": [37654]},
-        {
-            "dimensions": [
-                {
-                    "id": "/uslugi/integraciya-1s-s-marketplejsami",
-                    "name": "/uslugi/integraciya-1s-s-marketplejsami",
-                }
-            ],
-            "metrics": [35432],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/blog/detail/crm-dlya-stomatologii",
-                    "name": "/blog/detail/crm-dlya-stomatologii",
-                }
-            ],
-            "metrics": [33210],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/servisy/oblachnye-resheniya/arenda-1s",
-                    "name": "/servisy/oblachnye-resheniya/arenda-1s",
-                }
-            ],
-            "metrics": [31234],
-        },
-        {
-            "dimensions": [{"id": "/programmy/otrasli/", "name": "/programmy/otrasli/"}],
-            "metrics": [29876],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/po-dlya-biznesa", "name": "/uslugi/po-dlya-biznesa"}],
-            "metrics": [27654],
-        },
-        {"dimensions": [{"id": "/o-kompanii/", "name": "/o-kompanii/"}], "metrics": [25432]},
-        {
-            "dimensions": [
-                {
-                    "id": "/blog/detail/sdacha-polugodovoj-otchetnosti",
-                    "name": "/blog/detail/sdacha-polugodovoj-otchetnosti",
-                }
-            ],
-            "metrics": [23210],
-        },
-        {
-            "dimensions": [{"id": "/akcii-i-meropriyatiya/", "name": "/akcii-i-meropriyatiya/"}],
-            "metrics": [21234],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/servisy/1s-elektronnyj-dokumentooborot",
-                    "name": "/servisy/1s-elektronnyj-dokumentooborot",
-                }
-            ],
-            "metrics": [19876],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/programmy/1s-gosudarstvennye-i-munitsipalnye-zakupki-8",
-                    "name": "/programmy/1s-gosudarstvennye-i-munitsipalnye-zakupki-8",
-                }
-            ],
-            "metrics": [18765],
-        },
-        {
-            "dimensions": [{"id": "/uslugi/markirovka-1s", "name": "/uslugi/markirovka-1s"}],
-            "metrics": [17654],
-        },
-        {
-            "dimensions": [{"id": "/programmy/1s-bitrix", "name": "/programmy/1s-bitrix"}],
-            "metrics": [16543],
-        },
-        {
-            "dimensions": [{"id": "/servisy/1s-kontragent", "name": "/servisy/1s-kontragent"}],
-            "metrics": [15432],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya",
-                    "name": "/programmy/1s-bukhgalteriya-gosudarstvennogo-uchrezhdeniya",
-                }
-            ],
-            "metrics": [14321],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/nashi-rezultaty/vnedrennye-resheniya/",
-                    "name": "/nashi-rezultaty/vnedrennye-resheniya/",
-                }
-            ],
-            "metrics": [13210],
-        },
-        {
-            "dimensions": [
-                {"id": "/uslugi/importozameshchenie", "name": "/uslugi/importozameshchenie"}
-            ],
-            "metrics": [12345],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/uslugi/realnaya-avtomatizaciya",
-                    "name": "/uslugi/realnaya-avtomatizaciya",
-                }
-            ],
-            "metrics": [11234],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/servisy/oblachnye-resheniya/bitrix24",
-                    "name": "/servisy/oblachnye-resheniya/bitrix24",
-                }
-            ],
-            "metrics": [10987],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/programmy/1s-zarplata-i-kadry-gosudarstvennogo-uchrezhdeniya",
-                    "name": "/programmy/1s-zarplata-i-kadry-gosudarstvennogo-uchrezhdeniya",
-                }
-            ],
-            "metrics": [9876],
-        },
-        {
-            "dimensions": [{"id": "/servisy/1spark-riski", "name": "/servisy/1spark-riski"}],
-            "metrics": [8765],
-        },
-        {"dimensions": [{"id": "/kntakty", "name": "/kontakty"}], "metrics": [7654]},
-        {
-            "dimensions": [
-                {
-                    "id": "/uslugi/udalennyy-sistemnyy-administrator",
-                    "name": "/uslugi/udalennyy-sistemnyy-administrator",
-                }
-            ],
-            "metrics": [6543],
-        },
-        {
-            "dimensions": [{"id": "/programmy/1s-demo", "name": "/programmy/1s-demo"}],
-            "metrics": [5432],
-        },
-        {
-            "dimensions": [{"id": "/servisy/1s-otchetnost", "name": "/servisy/1s-otchetnost"}],
-            "metrics": [4321],
-        },
-        {
-            "dimensions": [{"id": "/gossektor/programmy", "name": "/gossektor/programmy"}],
-            "metrics": [3210],
-        },
-        {"dimensions": [{"id": "/karera", "name": "/karera"}], "metrics": [2109]},
-        {
-            "dimensions": [
-                {"id": "/o-kompanii/novosti/196446", "name": "/o-kompanii/novosti/196446"}
-            ],
-            "metrics": [1098],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/o-kompanii/politika-konfidencialnosti",
-                    "name": "/o-kompanii/politika-konfidencialnosti",
-                }
-            ],
-            "metrics": [876],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/o-kompanii/obrabotka-personalnyh-dannyh",
-                    "name": "/o-kompanii/obrabotka-personalnyh-dannyh",
-                }
-            ],
-            "metrics": [654],
-        },
-        {
-            "dimensions": [{"id": "/blagodarstvennye-pisma", "name": "/blagodarstvennye-pisma"}],
-            "metrics": [432],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/akcii-i-meropriyatiya/akcii/182123",
-                    "name": "/akcii-i-meropriyatiya/akcii/182123",
-                }
-            ],
-            "metrics": [321],
-        },
-        {
-            "dimensions": [
-                {
-                    "id": "/nashi-rezultaty/vnedrennye-resheniya/195412",
-                    "name": "/nashi-rezultaty/vnedrennye-resheniya/195412",
-                }
-            ],
-            "metrics": [210],
-        },
-    ],
+                    "alt": "Иконка меню, раздел документов и бухгалтерии",
+                    "url": "http://www.diocon.ru/local/templates/diocon/images/menu/menu-1.png",
+                },
+            ]
+        ],
+    },
+    "total_tokens": 82546,
+    "total_money": 31.6722,
 }

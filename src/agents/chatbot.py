@@ -1,5 +1,4 @@
 import os
-from uuid import UUID
 
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage
@@ -19,7 +18,7 @@ PROMPT = """
 """
 
 
-async def call_chatbot(user_id: UUID, user_prompt: str, generation_id: str) -> str:
+async def call_chatbot(user_id: str, user_prompt: str, generation_id: str) -> str:
     """Вызов чат-бот агента для диалога со студентом в рамках его учебного прогресса"""
 
     async with AsyncSqliteSaver.from_conn_string(os.fspath(SQLITE_PATH)) as checkpointer:

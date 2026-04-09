@@ -1,23 +1,25 @@
 from contextlib import asynccontextmanager
 
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from ..agents.rag import delete_old_data
+from ..agents.rag import INDEX_NAME, client, delete_old_data
 from ..core.errors import AppError
 from .routers import router
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    scheduler = BackgroundScheduler()
+    client.get_or_create_collection(INDEX_NAME)
+    scheduler = AsyncIOScheduler()
     scheduler.add_job(
         delete_old_data,
         trigger="interval",
         hours=1,
         args=[3],
+        misfire_grace_time=300,
     )
     scheduler.start()
     try:
@@ -66,7 +68,7 @@ def set_handlers(app: FastAPI) -> None:
 def setup_middleware(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

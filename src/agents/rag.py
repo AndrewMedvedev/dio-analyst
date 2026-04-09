@@ -3,6 +3,7 @@ import json
 import logging
 import re
 import time
+from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
@@ -22,32 +23,118 @@ client = chromadb.PersistentClient(CHROMA_PATH)
 splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=50, length_function=len)
 
 
-async def indexing(text: str, metadata: dict[str, Any] | None = None) -> list[str]:
-    """Индексация и добавление документа в семантический индекс.
+# async def indexing(text: str, metadata: dict[str, Any] | None = None) -> list[str]:
+#     """Индексация и добавление документа в семантический индекс.
+
+#     :param text: Текст документа.
+#     :param metadata: Мета-информация документа.
+#     :returns: Идентификаторы чанков в индексе.
+#     """
+
+#     if not text.strip():
+#         logger.warning("Attempted to index empty text!")
+#         return []
+#     start_time = time.monotonic()
+#     logger.info("Starting index document text, length %s characters", len(text))
+#     collection = client.get_collection(INDEX_NAME)
+#     chunks = splitter.split_text(text)
+#     logger.info(len(chunks))
+#     logger.info([len(i) for i in chunks])
+#     ids = [str(uuid4()) for _ in range(len(chunks))]
+#     # embeddings = await get_embeddings(chunks)
+#     embeddings = hf_model.encode_document(chunks, normalize_embeddings=False)
+#     collection.add(
+#         ids=ids,
+#         documents=chunks,
+#         embeddings=embeddings.tolist(),  # type: ignore  # noqa: PGH003
+#         metadatas=[metadata.copy() for _ in range(len(chunks))],  # type: ignore  # noqa: PGH003
+#     )
+#     logger.info("Finished indexing text, time %s seconds", round(time.monotonic() - start_time, 2))
+#     return ids
+
+
+def batch_chunks(items: list[Any], batch_size: int = 5) -> Iterable[list[Any]]:
+    """
+    Асинхронный генератор батчей фиксированного размера.
+
+    :param items: список элементов для батчинга
+    :param batch_size: размер одного батча (по умолчанию 5)
+    :param delay_between_batches: задержка между батчами в секундах (полезно при rate limit)
+    """
+    for i in range(0, len(items), batch_size):
+        batch = items[i : i + batch_size]
+        yield batch
+
+
+async def indexing(
+    text: str, metadata: dict[str, Any] | None = None, batch_size: int = 5
+) -> list[str]:
+    """
+    Индексация и добавление документа в семантический индекс с батчингом чанков.
 
     :param text: Текст документа.
     :param metadata: Мета-информация документа.
-    :returns: Идентификаторы чанков в индексе.
+    :param batch_size: Количество чанков в одном батче при добавлении в векторную БД.
+    :returns: Идентификаторы всех чанков в индексе.
     """
-
-    if not text.strip():
+    if not text or not text.strip():
         logger.warning("Attempted to index empty text!")
         return []
+
     start_time = time.monotonic()
     logger.info("Starting index document text, length %s characters", len(text))
+
     collection = client.get_or_create_collection(INDEX_NAME)
+
+    # Разбиваем текст на чанки
     chunks = splitter.split_text(text)
-    ids = [str(uuid4()) for _ in range(len(chunks))]
-    # embeddings = await get_embeddings(chunks)
+
+    if not chunks:
+        logger.warning("No chunks generated from text")
+        return []
+
+    logger.info("Generated %s chunks with lengths: %s", len(chunks), [len(i) for i in chunks])
+
+    # Генерируем уникальные ID для всех чанков
+    ids = [str(uuid4()) for _ in chunks]
+
+    # Получаем эмбеддинги (можно оставить синхронно, если hf_model быстрый,
+    # или сделать асинхронным при необходимости)
     embeddings = hf_model.encode_document(chunks, normalize_embeddings=False)
-    collection.add(
-        ids=ids,
-        documents=chunks,
-        embeddings=embeddings.tolist(),  # type: ignore  # noqa: PGH003
-        metadatas=[metadata.copy() for _ in range(len(chunks))],  # type: ignore  # noqa: PGH003
+    embeddings_list = embeddings.tolist()  # type: ignore  # noqa: PGH003
+
+    # Подготавливаем метаданные
+    metadatas = [metadata.copy() if metadata else {} for _ in chunks]
+
+    # Батчинг добавления в коллекцию
+    added_ids: list[str] = []
+
+    for batch_idx, batch_slice in enumerate(
+        batch_chunks(list(range(len(chunks))), batch_size=batch_size)
+    ):
+        batch_ids = [ids[i] for i in batch_slice]
+        batch_docs = [chunks[i] for i in batch_slice]
+        batch_embs = [embeddings_list[i] for i in batch_slice]
+        batch_metas = [metadatas[i] for i in batch_slice]
+
+        logger.info("Adding batch %s with %s chunks to collection", batch_idx + 1, len(batch_ids))
+
+        collection.add(
+            ids=batch_ids,
+            documents=batch_docs,
+            embeddings=batch_embs,
+            metadatas=batch_metas,
+        )
+
+        added_ids.extend(batch_ids)
+
+    logger.info(
+        "Finished indexing text (%s chunks), time: %s seconds",
+        len(chunks),
+        round(time.monotonic() - start_time, 2),
     )
-    logger.info("Finished indexing text, time %s seconds", round(time.monotonic() - start_time, 2))
-    return ids
+
+    return added_ids
 
 
 def clean_text(text: str) -> str:
@@ -137,10 +224,23 @@ async def retrieve(
 
 
 def delete_old_data(max_age_hours: int = 3) -> None:
+    """Удаляет из ChromaDB документы старше max_age_hours."""
     cutoff = datetime.now(UTC) - timedelta(hours=max_age_hours)
-    cutoff_str = cutoff.isoformat()
+
+    # Важно: переводим в Unix timestamp (число секунд)
+    cutoff_timestamp = int(cutoff.timestamp())
+
     collection = client.get_collection(INDEX_NAME)
-    old_docs = collection.get(where={"timestamp": {"$lt": cutoff_str}})
-    if old_docs["ids"]:
+
+    # Теперь фильтр будет работать, потому что значение — число
+    old_docs = collection.get(where={"timestamp": {"$lt": cutoff_timestamp}})
+
+    if old_docs.get("ids"):
         collection.delete(ids=old_docs["ids"])
-        logger.info(f"Из rag удалено {len(old_docs)} результатов")
+        deleted_count = len(old_docs["ids"])
+        logger.info(
+            "Из RAG удалено %s старых документов (старше %s часов)", deleted_count, max_age_hours
+        )
+
+    else:
+        logger.info("Нет старых документов для удаления (старше %s часов)", max_age_hours)

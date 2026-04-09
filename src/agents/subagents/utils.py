@@ -4,7 +4,6 @@ import os
 from urllib.parse import unquote, urlparse
 
 from bs4 import BeautifulSoup
-from langchain.messages import AIMessage
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
 
@@ -13,6 +12,7 @@ from ...core.depends import (
     text_splitter,
     yandex_gpt,
 )
+from ...core.errors import PageParsingError
 from ...settings import settings
 from ...utils.layout_structure import find_seo_issues
 from ...utils.web_parser import get_html_content, get_markdown_content
@@ -46,12 +46,6 @@ def is_image(url):
     return ext in ALLOWED_EXT
 
 
-async def count_tokens_with_ai_message(request: str, result: AIMessage) -> int:
-    count_request = yandex_gpt.get_num_tokens(request)
-    count_result = yandex_gpt.get_num_tokens(str(result.content))
-    return count_request + count_result
-
-
 async def count_tokens(request: str, result: str) -> int:
     count_request = yandex_gpt.get_num_tokens(request)
     count_result = yandex_gpt.get_num_tokens(result)
@@ -71,7 +65,7 @@ async def get_seo_issues(html: str) -> list:
     return result
 
 
-async def parce_site_markups(url: str) -> tuple:
+async def parce_site_markups(url: str) -> tuple | None:
     async with async_playwright() as playwright:
         browser = await playwright.chromium.connect(ws_endpoint=settings.chromium_ws_endpoint)
         try:
@@ -83,6 +77,6 @@ async def parce_site_markups(url: str) -> tuple:
             logger.warning(
                 "Fallback networkidle timeout for `%s` page, using domcontentloaded", url
             )
-
-        splited_markdown = text_splitter.split_text(markdown)
-        return splited_markdown, html
+            raise PageParsingError from None
+        else:
+            return splited_markdown, html

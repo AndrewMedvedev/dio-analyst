@@ -14,19 +14,7 @@
 <body>
   <div class="container">
     <h1>Здравствуйте!</h1>
-    <p>Вас пригласили присоединиться к системе тикетов <strong>{{ app_name }}</strong> в роли <strong>{{ role }}</strong>.</p>
-
-    <p>Это даст вам возможность:</p>
-    <ul>
-      {% if role == "End User" or role == "Customer Admin" %}
-        <li>Создавать и отслеживать заявки</li>
-        <li>Общаться с поддержкой</li>
-        {% if role == "Customer Admin" %}<li>Управлять пользователями своей организации</li>{% endif %}
-      {% else %}
-        <li>Работать с заявками клиентов</li>
-        <li>Отвечать и управлять статусами</li>
-      {% endif %}
-    </ul>
+    <p>Вас пригласили присоединиться к системе анализа сайтов.</p>
 
     <p style="text-align: center;">
       <a href="{{ invite_url }}" class="btn">Присоединиться →</a>

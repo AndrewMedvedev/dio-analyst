@@ -74,3 +74,9 @@ class DBError(AppError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     error_code = "DB_SERVER_ERROR"
     public_message = "Произошла ошибка на сервере с базой данных"
+
+
+class PageParsingError(AppError):
+    status_code = status.HTTP_502_BAD_GATEWAY
+    error_code = "PAGE_PARSING_FAILED"
+    public_message = "Не удалось загрузить и обработать страницу. Внешний ресурс недоступен или вернул некорректные данные."  # noqa: E501

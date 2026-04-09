@@ -2,6 +2,7 @@ import base64
 import json
 
 import aiohttp
+from langchain.messages import AIMessage
 
 from ...core.constants import BATCH_SIZE, REQUEST_TIMEOUT, STATUS_OK
 from ...core.depends import (
@@ -21,40 +22,37 @@ from ..prompts import (
     PROMPT_MARKDOWN,
     PROMPT_SUMMARIZE,
 )
-from .utils import count_tokens, count_tokens_with_ai_message, get_mime, is_image
+from .utils import count_tokens, get_mime, is_image
 
 
 async def analyze_json_ld(ld: list) -> dict:
     request = PROMPT_ANALYZE_JSON_LD.format(json_ld=ld)
-    result = await yandex_gpt.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    return {"json_ld": result.content, "total_tokens": total_tokens}
+    result: AIMessage = await yandex_gpt.ainvoke(request)
+
+    return {"json_ld": result.content, "total_tokens": result.usage_metadata["total_tokens"]}  # type: ignore  # noqa: PGH003
 
 
 async def generate_json_ld(markdown: list) -> dict:
     request = PROMPT_GENERATE_JSON_LD.format(data=markdown)
     result = await gpt_oss_120b.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    return {"json_ld": result.content, "total_tokens": total_tokens}
+    return {"json_ld": result.content, "total_tokens": result.usage_metadata["total_tokens"]}  # type: ignore  # noqa: PGH003
 
 
 async def analyze_llms_txt(txt: str) -> dict:
     request = PROMPT_ANALYZE_LLMS_TXT.format(data=txt)
     result = await yandex_gpt.ainvoke(request)
-    total_tokens = await count_tokens_with_ai_message(request, result)
-    return {"llms_txt": result.content, "total_tokens": total_tokens}
+    return {"llms_txt": result.content, "total_tokens": result.usage_metadata["total_tokens"]}  # type: ignore  # noqa: PGH003
 
 
 async def generate_llms_txt(markdown: list[str], url: str) -> dict:
     total_tokens = 0
     request_summarize = PROMPT_SUMMARIZE.format(data=markdown)
-    summarize = await gpt_oss_120b.ainvoke(request_summarize)
-    tokens = await count_tokens_with_ai_message(request_summarize, summarize)
-    total_tokens += tokens
+    summarize: AIMessage = await gpt_oss_120b.ainvoke(request_summarize)
+
+    total_tokens += summarize.usage_metadata["total_tokens"]  # type: ignore  # noqa: PGH003
     request = PROMPT_GENERATE_LLMS_TXT.format(data={"url": url, "data": summarize.content})
-    result = await yandex_gpt.ainvoke(request)
-    count = await count_tokens_with_ai_message(request, result)
-    total_tokens += count
+    result: AIMessage = await yandex_gpt.ainvoke(request)
+    total_tokens += result.usage_metadata["total_tokens"]  # type: ignore  # noqa: PGH003
     return {"llms_txt": result.content, "total_tokens": total_tokens}
 
 
@@ -106,7 +104,7 @@ async def _process_image_chunk(links: list[str]) -> tuple[list, int]:
 async def process_all_images(all_links: list[str]) -> tuple[list[str], int]:
     """Разбивает все ссылки на три части и обрабатывает их параллельно."""
     all_alts, total_tokens = await _process_image_chunk(all_links[:3])
-    # Разделение на три примерно равные части без numpy
+    """# Разделение на три примерно равные части без numpy
     # n = len(all_links)
     # part_size = n // 3
     # remainder = n % 3
@@ -129,7 +127,7 @@ async def process_all_images(all_links: list[str]) -> tuple[list[str], int]:
     #         continue
     #     alts, tokens = res
     #     all_alts.extend(alts)
-    #     total_tokens += tokens
+    #     total_tokens += tokens"""
 
     return all_alts, total_tokens
 

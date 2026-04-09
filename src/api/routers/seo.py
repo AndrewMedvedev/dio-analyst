@@ -26,15 +26,17 @@ async def get_seo(
     result = await agent.ainvoke({"url": url_str})  # type: ignore  # noqa: PGH003
     del result["html"]
     del result["markdown"]
+
     generation_id = str(uuid4())
     await rag.indexing(
         text=json.dumps(result),
         metadata={
-            "tenant_id": current_user.user_id,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "tenant_id": str(current_user.user_id),
+            "timestamp": int(datetime.now(UTC).timestamp()),
             "generation_id": generation_id,
         },
     )
+
     result["generation_id"] = generation_id
     schema = SEOResult(user_id=current_user.user_id, result=result)  # type: ignore  # noqa: PGH003
     await repository.create(entity=schema)
@@ -49,7 +51,7 @@ async def get_aio(
     repository: UserSEORepository = Depends(get_repo),
 ) -> dict:
     url_str = url.encoded_string()
-    markdown, html = await parce_site_markups(url_str)
+    markdown, html = await parce_site_markups(url_str)  # type: ignore  # noqa: PGH003
     result = await agent_aio.ainvoke(
         {"url": url_str, "html": html, "markdown": markdown}  # type: ignore  # noqa: PGH003
     )  # type: ignore  # noqa: PGH003
@@ -58,11 +60,12 @@ async def get_aio(
     await rag.indexing(
         text=json.dumps(result),
         metadata={
-            "tenant_id": current_user.user_id,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "tenant_id": str(current_user.user_id),
+            "timestamp": int(datetime.now(UTC).timestamp()),
             "generation_id": generation_id,
         },
     )
+
     result["generation_id"] = generation_id
     schema = SEOResult(user_id=current_user.user_id, result=result)  # type: ignore  # noqa: PGH003
     await repository.create(entity=schema)
