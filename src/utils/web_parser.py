@@ -221,8 +221,57 @@ def _extract_markdown(soup: BeautifulSoup) -> str:
     if body is None:
         return ""
     # Основные семантические элементы в порядке важности
-    elements = body.find_all({"h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "td", "th"})
-    return "\n".join([html_to_markdown.convert(str(element)) for element in elements])
+    elements = body.find_all(["h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "td", "th"])
+
+    return "\n".join([html_to_markdown.convert(str(element))["content"] for element in elements]) # type: ignore  # noqa: PGH003
+
+
+# def _extract_markdown(soup: BeautifulSoup) -> str:
+#     """Извлечение текста со страницы в формате Markdown с помощью markdownify"""
+
+#     if not soup:
+#         return ""
+
+#     # 1. Удаляем ненужные элементы (скрипты, стили, навигацию и т.д.)
+#     unwanted_tags = [
+#         "script",
+#         "style",
+#         "svg",
+#         "path",
+#         "meta",
+#         "link",
+#         "nav",
+#         "footer",
+#         "header",
+#         "noscript",
+#         "iframe",
+#         "aside",
+#         "form",
+#     ]
+#     for element in soup.find_all(unwanted_tags):
+#         element.decompose()
+
+#     # 2. Берём содержимое <body>, если его нет — возвращаем пустую строку
+#     body = soup.find("body")
+#     if body is None:
+#         # fallback: используем весь soup
+#         body = soup
+
+#     # 3. Конвертируем в Markdown
+#     # heading_style="ATX" → заголовки в стиле # H1, ## H2 (рекомендуется)
+#     markdown_text = md(
+#         str(body),  # передаём строку HTML
+#         heading_style="ATX",  # или "UNDERLINED"
+#         strip=["img"],  # убираем изображения (можно убрать эту строку, если нужны)
+#         bullets="•",  # стиль маркеров списка (опционально)
+#     )
+
+#     # 4. Очистка: убираем слишком много пустых строк
+#     lines = [line.strip() for line in markdown_text.splitlines() if line.strip()]
+#     clean_markdown = "\n\n".join(lines)
+#     print(clean_markdown)
+
+#     return clean_markdown
 
 
 async def get_markdown_content(browser: Browser, url: str) -> str:
