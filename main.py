@@ -28,56 +28,49 @@ async def lifespan(_: FastAPI):
         scheduler.shutdown()
 
 
-def create_fastapi_app() -> FastAPI:
-    app = FastAPI(lifespan=lifespan)
-    setup_middleware(app)
+app = FastAPI(lifespan=lifespan)
 
-    app.include_router(router)
-    return app
+app.include_router(router)
 
 
-def set_handlers(app: FastAPI) -> None:
-    @app.exception_handler(ValueError)
-    def value_exception_handler(request: Request, exc: ValueError) -> JSONResponse:  # noqa: ARG001
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "error": {
-                    "code": "VALIDATION_ERROR",
-                    "message": str(exc),
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "details": {},
-                }
-            },
-        )
-
-    @app.exception_handler(AppError)
-    def app_exception_handler(request: Request, exc: AppError) -> JSONResponse:  # noqa: ARG001
-        return JSONResponse(
-            status_code=exc.status_code,
-            content={
-                "error": {
-                    "code": exc.error_code,
-                    "message": exc.public_message,
-                    "status": exc.status_code,
-                    "details": exc.details,
-                }
-            },
-        )
-
-
-def setup_middleware(app: FastAPI) -> None:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+@app.exception_handler(ValueError)
+def value_exception_handler(request: Request, exc: ValueError) -> JSONResponse:  # noqa: ARG001
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "error": {
+                "code": "VALIDATION_ERROR",
+                "message": str(exc),
+                "status": status.HTTP_400_BAD_REQUEST,
+                "details": {},
+            }
+        },
     )
 
 
-app = create_fastapi_app()
-set_handlers(app)
+@app.exception_handler(AppError)
+def app_exception_handler(request: Request, exc: AppError) -> JSONResponse:  # noqa: ARG001
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": {
+                "code": exc.error_code,
+                "message": exc.public_message,
+                "status": exc.status_code,
+                "details": exc.details,
+            }
+        },
+    )
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

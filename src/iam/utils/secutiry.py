@@ -6,8 +6,8 @@ from uuid import uuid4
 import jwt
 from passlib.context import CryptContext
 
+from ...errors import UnauthorizedError
 from ...settings import settings
-from ..core.errors import UnauthorizedError
 from ..schemas import TokenType
 from .commons import current_datetime
 

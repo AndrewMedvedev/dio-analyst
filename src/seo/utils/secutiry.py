@@ -3,8 +3,8 @@ from typing import Any
 
 import jwt
 
+from ...errors import UnauthorizedError
 from ...settings import settings
-from ..core.errors import UnauthorizedError
 
 ALGORITHM = "HS256"
 

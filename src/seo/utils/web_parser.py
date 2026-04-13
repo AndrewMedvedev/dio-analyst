@@ -3,7 +3,8 @@ import random
 import html_to_markdown
 from bs4 import BeautifulSoup
 from playwright.async_api import Browser, BrowserContext, Page
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
+from ...errors import PageParsingError
 
 FINGERPRINT_SPOOFING_SCRIPT = """
 () => {
@@ -237,10 +238,11 @@ async def get_markdown_content(browser: Browser, url: str) -> str:
     page = await _get_current_page(browser)
     await page.goto(url)
     try:
-        await page.wait_for_load_state("networkidle", timeout=5_000)
-        await page.wait_for_load_state("load", timeout=5_000)
-    except PlaywrightTimeoutError:
-        await page.wait_for_load_state("domcontentloaded")
+        await page.wait_for_load_state("networkidle", timeout=60000)
+        await page.wait_for_load_state("load", timeout=60000)
+        await page.wait_for_load_state("domcontentloaded", timeout=60000)
+    except Exception:  # noqa: BLE001
+        raise PageParsingError from None
     page_content = await page.content()
     soup = BeautifulSoup(page_content, "html.parser")
     return _extract_markdown(soup)
@@ -259,6 +261,7 @@ async def get_html_content(browser: Browser, url: str) -> str:
     try:
         await page.wait_for_load_state("networkidle", timeout=60000)
         await page.wait_for_load_state("load", timeout=60000)
-    except PlaywrightTimeoutError:
         await page.wait_for_load_state("domcontentloaded", timeout=60000)
+    except Exception:  # noqa: BLE001
+        raise PageParsingError from None
     return await page.content()

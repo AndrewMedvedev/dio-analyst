@@ -3,9 +3,9 @@ from datetime import timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ...errors import EmailSendingFailedError
 from ...settings import INVITATION_EXPIRES_IN_DAYS, settings
 from ..core.entities import Invitation
-from ..core.errors import EmailSendingFailedError
 from ..database.repos import InvitationRepository
 from ..utils.commons import current_datetime
 from ..utils.mail import send_mail

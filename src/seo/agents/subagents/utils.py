@@ -4,7 +4,6 @@ import os
 from urllib.parse import unquote, urlparse
 
 from bs4 import BeautifulSoup
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
 
 from ....settings import settings
@@ -13,7 +12,6 @@ from ...core.depends import (
     text_splitter,
     yandex_gpt,
 )
-from ...core.errors import PageParsingError
 from ...utils.layout_structure import find_seo_issues
 from ...utils.web_parser import get_html_content, get_markdown_content
 
@@ -68,15 +66,7 @@ async def get_seo_issues(html: str) -> list:
 async def parce_site_markups(url: str) -> tuple | None:
     async with async_playwright() as playwright:
         browser = await playwright.chromium.connect(ws_endpoint=settings.chromium_ws_endpoint)
-        try:
-            markdown = await get_markdown_content(browser, url)
-            html = await get_html_content(browser, url)
-            splited_markdown = text_splitter.split_text(markdown)
-        except PlaywrightTimeoutError:
-            # Fallback в случае неудачного ожидания загрузки страницы
-            logger.warning(
-                "Fallback networkidle timeout for `%s` page, using domcontentloaded", url
-            )
-            raise PageParsingError from None
-        else:
-            return splited_markdown, html
+        markdown = await get_markdown_content(browser, url)
+        html = await get_html_content(browser, url)
+        splited_markdown = text_splitter.split_text(markdown)
+        return splited_markdown, html

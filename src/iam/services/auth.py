@@ -3,14 +3,14 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...settings import settings
-from ..core.entities import User
-from ..core.errors import (
+from ...errors import (
     InvitationExpiredError,
     NotFoundError,
     UnauthorizedError,
     UserAlreadyExistsError,
 )
+from ...settings import settings
+from ..core.entities import User
 from ..database.repos import InvitationRepository, UserRepository
 from ..schemas import TokensPair, TokenType, UserCreateForm
 from ..utils.commons import get_expiration_timestamp

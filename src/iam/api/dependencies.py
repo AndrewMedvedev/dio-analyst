@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..core.errors import UnauthorizedError
+from ...errors import UnauthorizedError
 from ..database.conn import session_factory
 from ..services.auth import AuthService
 from ..services.invitation import InvitationService
