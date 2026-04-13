@@ -9,12 +9,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
-from src.database.models import (  # noqa: I001
-    SEOResultOrm,  # noqa: F401
-    InvitationOrm,  # noqa: F401
-    UserOrm,  # noqa: F401
-)
-from src.database.base import Base
+from src import UserOrm, InvitationOrm, SEOResultOrm, Base  # noqa: F401, I001
+
 from src.settings import settings
 
 config = context.config
