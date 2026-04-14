@@ -23,36 +23,6 @@ client = chromadb.PersistentClient(CHROMA_PATH)
 splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=50, length_function=len)
 
 
-# async def indexing(text: str, metadata: dict[str, Any] | None = None) -> list[str]:
-#     """Индексация и добавление документа в семантический индекс.
-
-#     :param text: Текст документа.
-#     :param metadata: Мета-информация документа.
-#     :returns: Идентификаторы чанков в индексе.
-#     """
-
-#     if not text.strip():
-#         logger.warning("Attempted to index empty text!")
-#         return []
-#     start_time = time.monotonic()
-#     logger.info("Starting index document text, length %s characters", len(text))
-#     collection = client.get_collection(INDEX_NAME)
-#     chunks = splitter.split_text(text)
-#     logger.info(len(chunks))
-#     logger.info([len(i) for i in chunks])
-#     ids = [str(uuid4()) for _ in range(len(chunks))]
-#     # embeddings = await get_embeddings(chunks)
-#     embeddings = hf_model.encode_document(chunks, normalize_embeddings=False)
-#     collection.add(
-#         ids=ids,
-#         documents=chunks,
-#         embeddings=embeddings.tolist(),  # type: ignore  # noqa: PGH003
-#         metadatas=[metadata.copy() for _ in range(len(chunks))],  # type: ignore  # noqa: PGH003
-#     )
-#     logger.info("Finished indexing text, time %s seconds", round(time.monotonic() - start_time, 2))
-#     return ids
-
-
 def batch_chunks(items: list[Any], batch_size: int = 5) -> Iterable[list[Any]]:
     """
     Асинхронный генератор батчей фиксированного размера.
