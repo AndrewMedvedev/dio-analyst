@@ -46,6 +46,19 @@ class MetadataAnalysis(BaseModel):
     issues: list[str] | None = []
 
 
+# === НОВЫЙ КЛАСС ===
+class StrongSentenceStructureAnalysis(BaseModel):
+    strong_constructions: list[
+        str
+    ]  # примеры сильных конструкций (параллелизм, триада, риторический вопрос и т.д.)
+    writing_style: str  # стиль текста: продающий, экспертный, эмоциональный, разговорный, повествовательный и т.д.  # noqa: E501
+    influence_on_reader: str  # как конструкции влияют на читателя (вовлечение, доверие, эмоции, желание действовать и т.д.)  # noqa: E501
+    influence_on_seo: str  # влияние на SEO (читаемость, время на странице, поведенческие факторы)
+    influence_on_conversion: str  # влияние на конверсии и эффективность контента
+    examples: list[str]  # конкретные примеры предложений из текста с этими конструкциями
+    recommendations: list[str]  # рекомендации по улучшению/усилению конструкций
+
+
 class SEOAnalysisReport(BaseModel):
     headers: list[HeaderAnalysis]
     keywords: list[KeywordAnalysis]
@@ -53,6 +66,7 @@ class SEOAnalysisReport(BaseModel):
     images: list[ImageAnalysis]
     readability: ReadabilityAnalysis
     metadata: MetadataAnalysis
+    strong_structures: StrongSentenceStructureAnalysis  # ← новый обязательный блок
     overall_score: float | None = None
     recommendations: list[str]
 

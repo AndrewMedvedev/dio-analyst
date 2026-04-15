@@ -54,6 +54,12 @@ gemma_3_27b_it: ChatOpenAI = ChatOpenAI(
     base_url="https://llm.api.cloud.yandex.net/v1",
     max_retries=3,
 )
+qwen_3_5_35_b: ChatOpenAI = ChatOpenAI(
+    api_key=SecretStr(settings.yandexcloud.api_key),
+    model=f"gpt://{settings.yandexcloud.folder_id}/qwen3.5-35b-a3b-fp8",
+    base_url="https://llm.api.cloud.yandex.net/v1",
+    max_retries=3,
+)
 
 text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
     chunk_size=CHUNK_SIZE,

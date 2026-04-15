@@ -7,9 +7,9 @@ from langgraph.graph import END, START, StateGraph
 
 from ...core.depends import (
     cwv_prompt_template,
-    gpt_oss_120b,
     parser_cwv,
     parser_result,
+    qwen_3_5_35_b,
     text_splitter,
     yandex_gpt,
 )
@@ -59,24 +59,26 @@ async def get_core_web_vitals(state: State) -> dict:
 
 
 async def final_result(state: State) -> dict:
-    chain = gpt_oss_120b | parser_result
+    chain = qwen_3_5_35_b | parser_result
     dumps_issue = json.dumps(state["seo_issue"])
     split_issue = text_splitter.split_text(dumps_issue)
     request = PROMPT_RESULT.format(
         markdown=state["markdown"],
+        markdown_seo=state["analyze_md"],
         seo_issue=split_issue,
         cwv=state["cwv"],
         format_instructions=parser_result.get_format_instructions(),
     )
-    count_data = yandex_gpt.get_num_tokens(request)
-
-    result: SiteAnalysisReport = await chain.ainvoke(request)
-    count_result = yandex_gpt.get_num_tokens(result.model_dump_json())
+    count_data = qwen_3_5_35_b.get_num_tokens(request)
+    report: SiteAnalysisReport = await chain.ainvoke(request)
+    count_result = qwen_3_5_35_b.get_num_tokens(report.model_dump_json())
     tokens = count_data + count_result
     total_tokens = state["total_tokens"] + tokens
     logger.info("Результат SEO")
-    total_money = (tokens / 1000 * 0.30) + state["total_money"]
-    return {"result": result.to_dict, "total_tokens": total_tokens, "total_money": total_money}
+    total_money = (tokens / 1000 * 0.50) + state["total_money"]
+    result = report.to_dict
+    result["analyze_md"] = state["analyze_md"]
+    return {"result": result, "total_tokens": total_tokens, "total_money": total_money}
 
 
 builder = StateGraph(State)

@@ -236,11 +236,10 @@ async def get_markdown_content(browser: Browser, url: str) -> str:
     """
 
     page = await _get_current_page(browser)
-    await page.goto(url)
+    await page.goto(url, timeout=60000, wait_until="domcontentloaded")
     try:
         await page.wait_for_load_state("networkidle", timeout=60000)
-        await page.wait_for_load_state("load", timeout=60000)
-        await page.wait_for_load_state("domcontentloaded", timeout=60000)
+
     except Exception:  # noqa: BLE001
         raise PageParsingError from None
     page_content = await page.content()
@@ -257,11 +256,10 @@ async def get_html_content(browser: Browser, url: str) -> str:
     """
 
     page = await _get_current_page(browser)
-    await page.goto(url, timeout=60000)
+    await page.goto(url, timeout=60000, wait_until="domcontentloaded")
     try:
         await page.wait_for_load_state("networkidle", timeout=60000)
-        await page.wait_for_load_state("load", timeout=60000)
-        await page.wait_for_load_state("domcontentloaded", timeout=60000)
+
     except Exception:  # noqa: BLE001
         raise PageParsingError from None
     return await page.content()
