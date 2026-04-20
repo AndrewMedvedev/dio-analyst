@@ -45,16 +45,14 @@ class ReadabilityAnalysis(BaseModel):
     word_count: int = Field(..., description="Общее количество слов в тексте")
     sentence_count: int = Field(..., description="Общее количество предложений")
     paragraphs_count: int = Field(..., description="Общее количество абзацев")
-    readability_score: float | None = Field(
-        default=None, description="Оценка читаемости (например, Flesch-Kincaid score)"
-    )
+    readability_score: float = Field(..., description="Оценка читаемости от 1 до 100, чем оценка ближе к 100 тем лучше читаемость текста")  # noqa: E501
     issues: list[str] | None = Field(default=[], description="Проблемы с читаемостью текста")
 
 
 class MetadataAnalysis(BaseModel):
-    title: str | None = Field(default=None, description="Содержимое тега <title>")
-    description: str | None = Field(default=None, description="Содержимое мета-тега description")
-    issues: list[str] | None = Field(
+    title: str = Field(default=..., description="Содержимое тега <title>")
+    description: str = Field(default=..., description="Содержимое мета-тега description")
+    issues: list[str] = Field(
         default=[],
         description="Проблемы с мета-данными (отсутствие, слишком короткий/длинный и т.д.)",
     )

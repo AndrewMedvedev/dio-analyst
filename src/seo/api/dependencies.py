@@ -4,7 +4,7 @@ from uuid import UUID
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...errors import UnauthorizedError
@@ -32,7 +32,6 @@ class CurrentUser(BaseModel):
     """Авторизованный пользователь, который делает запрос к сервису"""
 
     user_id: UUID
-    email: EmailStr
 
 
 def get_current_user(
@@ -46,7 +45,7 @@ def get_current_user(
         raise UnauthorizedError("Invalid token: missing sub claim")
     return CurrentUser(
         user_id=user_id,
-        email=payload.get("email"),  # type: ignore  # noqa: PGH003
+        # type: ignore  # noqa: PGH003
     )
 
 
