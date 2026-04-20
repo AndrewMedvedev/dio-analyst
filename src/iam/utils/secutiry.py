@@ -81,3 +81,36 @@ def validate_token(token: str) -> dict[str, Any]:
         raise UnauthorizedError("Token signature expired!") from None
     except jwt.PyJWTError:
         raise UnauthorizedError("Invalid token!") from None
+
+
+def create_access_token(
+    user_id: str,
+) -> str:
+    """Выпуск access токена"""
+
+    now = current_datetime()
+    expires_at = now + timedelta(minutes=settings.jwt.access_token_expires_in_minutes)
+    payload = {
+        "sub": user_id,
+        "exp": expires_at.timestamp(),
+        "iat": now.timestamp(),
+        "type": "access",
+        "jti": f"{uuid4()}",
+    }
+
+    return jwt.encode(payload=payload, key=settings.secret_key, algorithm=ALGORITHM)
+
+
+def create_refresh_token(user_id: str) -> str:
+    """Выпуск refresh токена"""
+
+    now = current_datetime()
+    expires_at = now + timedelta(days=settings.jwt.refresh_token_expires_in_days)
+    payload = {
+        "sub": user_id,
+        "exp": expires_at.timestamp(),
+        "iat": now.timestamp(),
+        "type": "refresh",
+        "jti": f"{uuid4()}",
+    }
+    return jwt.encode(payload=payload, key=settings.secret_key, algorithm=ALGORITHM)

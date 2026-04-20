@@ -12,9 +12,16 @@ from ...errors import (
 from ...settings import settings
 from ..core.entities import User
 from ..database.repos import InvitationRepository, UserRepository
-from ..schemas import TokensPair, TokenType, UserCreateForm
+from ..schemas import Tokens, TokensPair, TokenType, UserCreateForm
 from ..utils.commons import get_expiration_timestamp
-from ..utils.secutiry import generate_token, hash_password, verify_password
+from ..utils.secutiry import (
+    create_access_token,
+    create_refresh_token,
+    generate_token,
+    hash_password,
+    validate_token,
+    verify_password,
+)
 
 
 def create_tokens_pair(payload: dict[str, Any]) -> TokensPair:
@@ -34,6 +41,27 @@ def create_tokens_pair(payload: dict[str, Any]) -> TokensPair:
         access_token=access_token,
         refresh_token=refresh_token,
         expires_at=get_expiration_timestamp(access_token_expires_in),
+    )
+
+
+def create_tokens_for_user(user_id: str) -> Tokens:
+    """Выпуск пары токенов access и refresh"""
+
+    # 1. Выпуск токенов
+    access_token = create_access_token(
+        user_id=user_id,
+    )
+    refresh_token = create_refresh_token(user_id=user_id)
+
+    # 2. Расчёт времени истечения токенов
+    access_token_expires_at = get_expiration_timestamp(
+        expires_in=timedelta(minutes=settings.jwt.access_token_expires_in_minutes)
+    )
+
+    return Tokens(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        expires_at=access_token_expires_at,
     )
 
 
@@ -86,6 +114,17 @@ class AuthService:
         payload = {
             "iss": settings.app.url,
             "sub": f"{user.id}",
-            "email": user.email,
         }
         return create_tokens_pair(payload)
+
+    async def refresh_tokens(self, refresh_token: str) -> Tokens:
+        """Обновление пары токенов с ротацией"""
+
+        # 1. декодирование refresh токена, чтобы получить jti и exp
+        payload = validate_token(refresh_token)
+        user_id, jti = payload.get("sub"), payload.get("jti")
+
+        if jti is None and user_id is None:
+            raise UnauthorizedError("Refresh token is invalid or expired")
+
+        return create_tokens_for_user(user_id)  # type: ignore  # noqa: PGH003

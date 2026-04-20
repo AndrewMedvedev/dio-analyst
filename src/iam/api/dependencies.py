@@ -29,6 +29,9 @@ def get_auth_service(session: AsyncSession = Depends(get_db)) -> AuthService:
     return AuthService(session)
 
 
+AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
+
+
 def get_invitation_service(session: AsyncSession = Depends(get_db)) -> InvitationService:
     return InvitationService(session)
 

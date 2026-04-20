@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from ...schemas import TokensPair, UserCreateForm
+from ...schemas import Tokens, TokensPair, TokensRefresh, UserCreateForm
 from ...services.auth import AuthService
-from ..dependencies import get_auth_service
+from ..dependencies import AuthServiceDep, get_auth_service
 
 router = APIRouter(prefix="/auth", tags=["Авторизация"])
 
@@ -35,3 +35,13 @@ async def login(
     service: AuthService = Depends(get_auth_service),
 ) -> TokensPair:
     return await service.authenticate(form_data.username, form_data.password)
+
+
+@router.post(
+    path="/refresh",
+    status_code=status.HTTP_200_OK,
+    response_model=Tokens,
+    summary="Обновление пары токенов",
+)
+async def refresh(data: TokensRefresh, service: AuthServiceDep) -> Tokens:
+    return await service.refresh_tokens(data.refresh_token)

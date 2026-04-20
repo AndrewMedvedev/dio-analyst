@@ -5,6 +5,17 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, PositiveInt
 
 
+class Tokens(BaseModel):
+    """Пара токенов access и refresh"""
+
+    access_token: str = Field(..., description="Access токен")
+    refresh_token: str = Field(..., description="Refresh токен")
+    token_type: str = Field(default="Bearer", frozen=True)
+    expires_at: PositiveInt = Field(
+        ..., description="Время истечения access токена в формате timestamp"
+    )
+
+
 class InvitationCreate(BaseModel):
     """Отправка приглашения"""
 
@@ -69,3 +80,9 @@ class UserResponse(BaseModel):
     full_name: str | None = None
     is_active: bool = True
     created_at: datetime
+
+
+class TokensRefresh(BaseModel):
+    """Запрос для обновления токенов"""
+
+    refresh_token: str = Field(..., description="Refresh токен")
