@@ -10,15 +10,14 @@ from uuid import uuid4
 
 import chromadb
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from sentence_transformers import SentenceTransformer
 
 from ...settings import CHROMA_PATH
+from ..core.depends import embeddings
 
 INDEX_NAME = "main-index"
 
 logger = logging.getLogger(__name__)
 
-hf_model = SentenceTransformer("deepvk/USER-bge-m3")
 client = chromadb.PersistentClient(CHROMA_PATH)
 splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=50, length_function=len)
 
@@ -70,8 +69,8 @@ async def indexing(
 
     # Получаем эмбеддинги (можно оставить синхронно, если hf_model быстрый,
     # или сделать асинхронным при необходимости)
-    embeddings = hf_model.encode_document(chunks, normalize_embeddings=False)
-    embeddings_list = embeddings.tolist()  # type: ignore  # noqa: PGH003
+    embed = embeddings.embed(chunks)
+    embeddings_list = [i.tolist() for i in embed]  # type: ignore  # noqa: PGH003
 
     # Подготавливаем метаданные
     metadatas = [metadata.copy() if metadata else {} for _ in chunks]
@@ -148,8 +147,8 @@ async def retrieve(
     logger.info("Retrieving for query: '%s...'", query[:50])
 
     # embedding = await get_embeddings([query])
-    embedding = hf_model.encode_query(query, normalize_embeddings=False)
-    params = {"query_embeddings": [embedding.tolist()], "n_results": n_results}  # type: ignore  # noqa: PGH003
+    embedding = embeddings.query_embed(query)
+    params = {"query_embeddings": [i.tolist() for i in embedding], "n_results": n_results}  # type: ignore  # noqa: PGH003
 
     if metadata_filter:
         if len(metadata_filter) == 0:
