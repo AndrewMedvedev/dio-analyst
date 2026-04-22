@@ -2,6 +2,8 @@ import logging
 from contextlib import asynccontextmanager
 
 import uvicorn
+from alembic import command
+from alembic.config import Config
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -73,5 +75,8 @@ app.add_middleware(
 
 
 if __name__ == "__main__":
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+    print("Миграции успешно применены.")  # noqa: T201
     logging.basicConfig(level=logging.INFO)
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")  # noqa: S104
